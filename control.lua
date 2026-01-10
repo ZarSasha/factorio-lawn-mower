@@ -17,7 +17,7 @@ local function destroy_all_corpses_and_drop_any_items(info)
   -- Parameters:
   local surface = info.surface
   local corpses = info.corpses
-  -- Clears corpses, raising event and dropping any items:
+  -- Clears corpses, raising event and dropping items if minable:
   for _, corpse in pairs(corpses) do
     if corpse.minable then
       for i = 1, 11 do
