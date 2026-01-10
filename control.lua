@@ -1,4 +1,4 @@
---[[ local function clear_area(info)
+local function clear_area(info)
   local surface = info.surface
   local area    = info.area
   local range   = info.range or 0
@@ -29,9 +29,9 @@
     ::continue::
     corpse.destroy({raise_destroy = true}) -- raises event just in case
   end
-end ]]
+end
 
-function clear_area(info)
+--[[ function clear_area(info)
   local surface = info.surface
   local area    = info.area
   local range   = info.range or 0
@@ -60,7 +60,7 @@ function clear_area(info)
   if (storage.settings.lawnmower_drop_minable_items) then
     temp_inventory.destroy()
   end
-end
+end ]]
 
 -- EVENTS
 
