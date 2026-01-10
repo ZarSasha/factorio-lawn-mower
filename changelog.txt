@@ -7,6 +7,7 @@ Date: 2026-01-11
     - items dropped by corpses upon removal can now be picked up by walking over them, and they
       won't be moved by any existing conveyor belts.
   Changes:
+    - TODO: Restore old method of mining corpse, since that also retrieves any inventory.
     - now raises an event when corpses with an inventory are destroyed, just in case other mods
       need to know.
     - compacted code, tidied up formatting, simplified mod structure.
