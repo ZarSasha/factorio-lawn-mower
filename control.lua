@@ -27,17 +27,15 @@ local function destroy_all_corpses_and_drop_items(info)
       corpse.destroy() goto continue
     end
     local temp_inventory = game.create_inventory(1)
+    local position = corpse.position
     corpse.mine({
       inventory = temp_inventory
     })
     surface.spill_inventory({
       inventory     = temp_inventory,
-      position      = corpse.position,
+      position      = position,
       allow_belts   = false, -- not moved by existing belts
       enable_looted = true,  -- walk over to pick up
-    })
-    corpse.destroy({
-      raise_destroy = true -- informs other mods, just in case
     })
     temp_inventory.destroy()
     ::continue::
