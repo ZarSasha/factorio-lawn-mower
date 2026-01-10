@@ -17,12 +17,12 @@ local function destroy_all_corpses_and_drop_any_items(info)
   -- Parameters:
   local surface = info.surface
   local corpses = info.corpses
-  -- Clears corpses, raising event and dropping items if minable:
+  -- Clear corpses, raise event and drop items if minable:
   for _, corpse in pairs(corpses) do
     if corpse.minable then
       for i = 1, 11 do
         local single_inventory = corpse.get_inventory(i)
-        if single_inventory == nil then return end
+        if single_inventory == nil then break end
         surface.spill_inventory({
           inventory     = single_inventory,
           position      = corpse.position,
@@ -67,8 +67,8 @@ local function clear_area(info)
     })
   else
     destroy_all_corpses({
-      corpses = corpses}
-    )
+      corpses = corpses
+    })
   end
 end
 
