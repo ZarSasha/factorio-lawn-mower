@@ -1,3 +1,4 @@
+-- Helper function for destroying all corpses:
 local function destroy_all_corpses(info)
   local corpses = info.corpses
   -- Clears corpses, raises event if inventory:
@@ -11,6 +12,7 @@ local function destroy_all_corpses(info)
   end
 end
 
+-- Helper function for destroying all corpses and spilling inventories unto the ground:
 local function destroy_all_corpses_and_spill_inventories(info)
   local surface = info.surface
   local corpses = info.corpses
@@ -33,6 +35,7 @@ local function destroy_all_corpses_and_spill_inventories(info)
   end
 end
 
+-- Main function for clearing area of decoratives and corpses depending on configuration:
 local function clear_area(info)
   local surface = info.surface
   local area    = info.area
@@ -45,7 +48,7 @@ local function clear_area(info)
     area.right_bottom.x = area.right_bottom.x + range
     area.right_bottom.y = area.right_bottom.y + range
   end
-  -- Clears decoratives:
+  -- Clears decoratives by default:
   if not alt then
     surface.destroy_decoratives({
       area = area
@@ -71,6 +74,7 @@ end
 
 -- EVENTS
 
+-- Clears decoratives and corpses with normal selection mode:
 script.on_event({
     defines.events.on_player_selected_area,
 }, function(event)
@@ -81,6 +85,7 @@ script.on_event({
   })
 end)
 
+-- Only clears corpses with alternative selection mode:
 script.on_event({
     defines.events.on_player_alt_selected_area
 }, function(event)
@@ -92,6 +97,7 @@ script.on_event({
   })
 end)
 
+-- Clears decoratives and corpses in a defined area around entities when built:
 script.on_event({
     defines.events.on_built_entity,
     defines.events.on_robot_built_entity,
