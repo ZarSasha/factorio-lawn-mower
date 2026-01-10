@@ -5,10 +5,11 @@
 -- For use with item drops turned off.
 local function destroy_all_corpses(info)
   local corpses = info.corpses
-  -- Clears corpses, raises event if inventory present:
+  -- Clears corpses, raises event if minable:
   for _, corpse in pairs(corpses) do
-    local inventory = corpse.get_inventory(1) -- assumes one inventory
-    if not inventory then corpse.destroy() goto continue end
+    if not corpse.minable then
+      corpse.destroy() goto continue
+    end
     corpse.destroy({
       raise_destroy = true -- informs other mods, just in case
     })
@@ -17,17 +18,20 @@ local function destroy_all_corpses(info)
 end
 
 -- For use with item drops turned on.
-local function destroy_all_corpses_and_spill_inventories(info)
+local function destroy_all_corpses_and_drop_items(info)
   local surface = info.surface
   local corpses = info.corpses
-  -- Clears corpses, raises event if inventory present and spills contents:
+  -- Clears corpses, raises event if minable and drops items on ground:
   for _, corpse in pairs(corpses) do
-    local inventory = corpse.get_inventory(1) -- assumes one inventory
-    if not inventory then
+    if not corpse.minable then
       corpse.destroy() goto continue
     end
+    local temp_inventory = game.create_inventory(1)
+    corpse.mine({
+      inventory = temp_inventory
+    })
     surface.spill_inventory({
-      inventory     = inventory,
+      inventory     = temp_inventory,
       position      = corpse.position,
       allow_belts   = false, -- not moved by existing belts
       enable_looted = true,  -- walk over to pick up
@@ -35,6 +39,7 @@ local function destroy_all_corpses_and_spill_inventories(info)
     corpse.destroy({
       raise_destroy = true -- informs other mods, just in case
     })
+    temp_inventory.destroy()
     ::continue::
   end
 end
@@ -58,14 +63,14 @@ local function clear_area(info)
       area = area
     })
   end
-  -- Clears corpses, optionally spills inventories:
+  -- Clears corpses, optionally drops any items:
   local corpses = surface.find_entities_filtered({
     area = area,
     type = "corpse"
   })
   if corpses == {} then return end
   if storage.settings.lawnmower_drop_minable_items then
-    destroy_all_corpses_and_spill_inventories({
+    destroy_all_corpses_and_drop_items({
       surface = surface,
       corpses = corpses
     })

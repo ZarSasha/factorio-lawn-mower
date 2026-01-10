@@ -2,19 +2,15 @@
 Version: 0.2.0
 Date: 2026-01-11
   Major Features:
-    - the alternative selection option (shift + left click) now removes only corpses.
+    - the alternative selection option (shift + left click by default) now clears only corpses.
   Minor Features:
-    - items dropped by corpses upon removal can now be picked up by walking over them, and they
-      won't be moved by any existing conveyor belts.
+    - items dropped from cleared corpses can now be picked up by walking over them, and they won't
+      be moved by any existing conveyor belts.
   Changes:
-    - TODO: Restore old method of mining corpse, since that also retrieves any inventory.
-    - now raises an event when corpses with an inventory are destroyed, just in case other mods
-      need to know.
+    - now raises an event when minable corpses are cleared, just in case other mods need to know.
     - compacted code, tidied up formatting, simplified mod structure.
-  Info:
-    - updated name and description of item drop setting to reflect a new script method.
   Bugfixes:
-    - fixed issue with corpses not dropping any items on the ground when removed, even when the
+    - fixed issue with corpses not dropping any items on the ground when cleared, even when the
       setting for it is enabled (won't work on character corpses, btw).
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
