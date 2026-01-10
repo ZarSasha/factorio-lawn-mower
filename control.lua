@@ -10,57 +10,26 @@ local function clear_area(info)
   end
   surface.destroy_decoratives({area = area})
 
-  if not storage.settings.lawnmower_drop_minable_items then return end
   local corpses = surface.find_entities_filtered({area = area, type = "character-corpse"})
   if corpses == {} then return end
+  local drop_items = storage.settings.lawnmower_drop_minable_items
   for _, corpse in pairs(corpses) do
-    local pos = corpse.position
-    if not corpse.minable then goto continue end
-    for i = 1, 11 do
-      local inv = corpse.get_inventory(i)
-      if inv == nil then return end
-      surface.spill_inventory({
-        inventory     = inv,
-        position      = pos,
-        allow_belts   = false, -- needed?
-        enable_looted = true,  -- needed?
-      })
-    end
-    ::continue::
-    corpse.destroy({raise_destroy = true}) -- raises event just in case
-  end
-end
-
---[[ function clear_area(info)
-  local surface = info.surface
-  local area    = info.area
-  local range   = info.range or 0
-  if range > 0 then
-    area.left_top.x = area.left_top.x - range
-    area.left_top.y = area.left_top.y - range
-    area.right_bottom.x = area.right_bottom.x + range
-    area.right_bottom.y = area.right_bottom.y + range
-  end
-  surface.destroy_decoratives({area = area})
-  
-  local temp_inventory = nil
-  if (storage.settings.lawnmower_drop_minable_items) then
-    temp_inventory = game.create_inventory(0)
-  end
-  
-  local corpses = surface.find_entities_filtered({area = area, type="character-corpse"})
-  for _, corpse in pairs(corpses) do
-    if corpse.minable and storage.settings.lawnmower_drop_minable_items then
-      local position = corpse.position
-      local result = corpse.mine{inventory = temp_inventory}
+    if drop_items and corpse.minable then
+      local pos = corpse.position
+      for i = 1, 11 do
+        local inv = corpse.get_inventory(i)
+        if inv == nil then return end
+        surface.spill_inventory({
+          inventory     = inv,
+          position      = pos,
+          --allow_belts   = false, -- needed?
+          --enable_looted = true,  -- needed?
+        })
+      end
     end
     corpse.destroy()
   end
-  
-  if (storage.settings.lawnmower_drop_minable_items) then
-    temp_inventory.destroy()
-  end
-end ]]
+end
 
 -- EVENTS
 
