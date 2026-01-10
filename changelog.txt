@@ -4,6 +4,7 @@ Date: 2026-01-10
   Minor Features:
     - items dropped by corpses upon removal can now be picked up by walking over them, and they
       won't be moved by any existing conveyor belts.
+    - The alternative selection option (shift + left click) now removes only corpses.
   Changes:
     - compacted code, tidied up formatting, simplified mod structure.
     - now raises an event when corpses with an inventory are destroyed, just in case other mods

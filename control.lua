@@ -1,6 +1,6 @@
 local function destroy_all_corpses(info)
   local corpses = info.corpses
-  -- Clears corpses, raising event if there is an inventory:
+  -- Clears corpses, raises event if inventory:
   for _, corpse in pairs(corpses) do
     local inventory = corpse.get_inventory(1) -- assumes one inventory
     if not inventory then corpse.destroy() goto continue end
@@ -14,7 +14,7 @@ end
 local function destroy_all_corpses_and_spill_inventories(info)
   local surface = info.surface
   local corpses = info.corpses
-  -- Clears corpses, raising event and spilling inventories:
+  -- Clears corpses, raises event if inventory, spills inventories:
   for _, corpse in pairs(corpses) do
     local inventory = corpse.get_inventory(1) -- assumes one inventory
     if not inventory then
@@ -37,6 +37,7 @@ local function clear_area(info)
   local surface = info.surface
   local area    = info.area
   local range   = info.range or 0
+  local alt     = info.alt or false
   -- Optionally increases size of area:
   if range > 0 then
     area.left_top.x     = area.left_top.x     - range
@@ -45,10 +46,12 @@ local function clear_area(info)
     area.right_bottom.y = area.right_bottom.y + range
   end
   -- Clears decoratives:
-  surface.destroy_decoratives({
-    area = area
-  })
-  -- Clears corpses, optionally spilling inventories:
+  if not alt then
+    surface.destroy_decoratives({
+      area = area
+    })
+  end
+  -- Clears corpses, optionally spills inventories:
   local corpses = surface.find_entities_filtered({
     area = area,
     type = "corpse"
@@ -70,12 +73,22 @@ end
 
 script.on_event({
     defines.events.on_player_selected_area,
-    defines.events.on_player_alt_selected_area
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
   clear_area({
     surface = event.surface,
     area    = event.area
+  })
+end)
+
+script.on_event({
+    defines.events.on_player_alt_selected_area
+}, function(event)
+  if event.item ~= "lawnmower-lawnmower" then return end
+  clear_area({
+    surface = event.surface,
+    area    = event.area,
+    alt     = true
   })
 end)
 
