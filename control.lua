@@ -26,7 +26,7 @@ local function destroy_all_corpses_and_drop_items(info)
     if not corpse.minable then
       corpse.destroy() goto continue
     end
-    local temp_inventory = game.create_inventory(100) -- enough? enough.
+    local temp_inventory = game.create_inventory(160) -- enough? enough.
     local position = corpse.position
     corpse.mine({ -- deletes corpse once fully emptied
       inventory = temp_inventory
@@ -34,7 +34,7 @@ local function destroy_all_corpses_and_drop_items(info)
     surface.spill_inventory({
       inventory     = temp_inventory,
       position      = position,
-      allow_belts   = false, -- not moved by existing belts
+      allow_belts   = false, -- not dropped on existing belts
       enable_looted = true,  -- walk over to pick up
     })
     temp_inventory.destroy()
@@ -64,7 +64,7 @@ local function clear_area(info)
   -- Clears corpses, optionally drops any items:
   local corpses = surface.find_entities_filtered({
     area = area,
-    type = "character-corpse"
+    type = "corpse"
   })
   if corpses == {} then return end
   if storage.settings.lawnmower_drop_minable_items then

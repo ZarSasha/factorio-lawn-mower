@@ -7,7 +7,7 @@ Date: 2026-01-11
     - items dropped from cleared corpses can now be picked up by walking over them, and they won't
       be moved by any existing conveyor belts.
   Changes:
-    - now raises an event when minable corpses are cleared, just in case other mods need to know.
+    - now raises an event when minable corpses are destroyed, just in case other mods need to know.
     - compacted code, tidied up formatting, simplified mod structure.
   Bugfixes:
     - fixed issue with corpses not dropping any items on the ground when cleared, even when the
