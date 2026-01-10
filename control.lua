@@ -11,19 +11,19 @@ local function clear_area(info)
   surface.destroy_decoratives({area = area})
 
   if not storage.settings.lawnmower_drop_minable_items then return end
-
   local corpses = surface.find_entities_filtered({area = area, type = "corpse"})
   for _, corpse in pairs(corpses) do
     if not corpse.minable then goto continue end
-    local inv = corpse.get_inventory()
-    if inv == nil or inv.is_empty() then goto continue end
+    local temp_inventory = game.create_inventory(0)
+    corpse.mine({inventory = temp_inventory})
     corpse.spill_inventory({
-      inventory = corpse.inv,
-      position = corpse.position,
-      allow_belts = false,  -- needed?
-      enable_looted = true, -- needed?
+      inventory     = temp_inventory,
+      position      = corpse.position,
+      allow_belts   = false, -- needed?
+      enable_looted = true,  -- needed?
     })
-    corpse.destroy({raise_destroy = true}) -- raises event just in case
+    --corpse.destroy({raise_destroy = true})
+    temp_inventory.destroy()
     ::continue::
   end
 end
