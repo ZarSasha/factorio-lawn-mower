@@ -10,7 +10,6 @@ Date: 2026-01-10
     - now raises an event when corpses with an inventory are destroyed, just in case other mods
       need to know.
     - compacted code, tidied up formatting, simplified mod structure.
-    - removed storage table, caching of settings with it not really needed.
   Bugfixes:
     - fixed issue with corpses not dropping any items on the ground when removed, even when the
       setting for it is enabled (still not made to work on character corpses).
