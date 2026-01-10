@@ -31,8 +31,10 @@
   end
 end ]]
 
-function clear_area(surface, area, range)
-  local range = range or 0
+function clear_area(info)
+  local surface = info.surface
+  local area    = info.area
+  local range   = info.range or 0
   if range > 0 then
     area.left_top.x = area.left_top.x - range
     area.left_top.y = area.left_top.y - range
