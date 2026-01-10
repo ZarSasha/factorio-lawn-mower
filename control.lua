@@ -26,7 +26,7 @@ local function destroy_all_corpses_and_drop_items(info)
     if not corpse.minable then
       corpse.destroy() goto continue
     end
-    local temp_inventory = game.create_inventory(1)
+    local temp_inventory = game.create_inventory(0)
     local position = corpse.position
     corpse.mine({
       inventory = temp_inventory
