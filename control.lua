@@ -1,5 +1,7 @@
-function clear_area(surface, area, range)
-  local range = range or 0
+function clear_area(info)
+  local surface = info.surface
+  local area    = info.area
+  local range   = info.range or 0
   if range > 0 then
     area.left_top.x = area.left_top.x - range
     area.left_top.y = area.left_top.y - range
@@ -34,10 +36,10 @@ script.on_event({
     defines.events.on_player_alt_selected_area
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
-  clear_area(
-    event.surface,
-    event.area
-  )
+  clear_area({
+    surface = event.surface,
+    area    = event.area
+  })
 end)
 
 --[[ 
@@ -67,22 +69,24 @@ end)
 ]]
 
 script.on_event({
-    defines.events.on_built_entity,
-    defines.events.on_robot_built_entity,
-    defines.events.script_raised_built,
-    defines.events.script_raised_revive,
+    defines.events.on_built_entity,       -- entity
+    defines.events.on_robot_built_entity, -- entity
+    defines.events.script_raised_built,   -- entity
+    defines.events.script_raised_revive,  -- entity
+    defines.events.on_entity_cloned       -- destination
 }, function(event)
-  if event.entity == nil or
-    event.entity.type == "entity-ghost" or
-    event.entity.type == "tile-ghost" or
-    not event.entity.prototype.selectable_in_game then
+  local entity = event.entity or event.destination
+  if entity == nil or
+    entity.type == "entity-ghost" or
+    entity.type == "tile-ghost" or
+    not entity.prototype.selectable_in_game then
     return
   end
-  clear_area(
-    game.surfaces[event.entity.surface_index],
-    event.entity.selection_box,
-    storage.settings.lawnmower_building_clear_range
-  )
+  clear_area({
+    surface = game.surfaces[entity.surface_index],
+    area    = entity.selection_box,
+    range   = storage.settings.lawnmower_building_clear_range
+  })
 end)
 
 --[[ 
@@ -153,7 +157,7 @@ end
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
   if event.setting ~= "lawnmower-building-clear-range" and
      event.setting ~= "lawnmower-drop-minable-items" then
-      return
+    return
   end
   cacheSettings()
 end)

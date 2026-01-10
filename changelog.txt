@@ -2,7 +2,9 @@
 Version: 0.1.5
 Date: 2027-01-10
   Changes:
-    - a
+    - TODO: Check and fix issue with corpse inventory.
+    - TODO: Fix alt-select area cleaning not working at all.
+    - Compacted and tidied up code.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 2025-06-12
