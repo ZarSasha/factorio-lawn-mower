@@ -10,7 +10,7 @@ data:extend({
   {
     type = "bool-setting",
     name = "lawnmower-drop-minable-items",
-    setting_type ="runtime-global",
+    setting_type = "runtime-global",
     default_value = true,
   }
 })

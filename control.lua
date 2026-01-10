@@ -1,4 +1,8 @@
--- Helper function for destroying all corpses:
+--------------------------------------------------------------------------------
+-- CLEARING AREA OF DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
+--------------------------------------------------------------------------------
+
+-- For use with item drops turned off.
 local function destroy_all_corpses(info)
   local corpses = info.corpses
   -- Clears corpses, raises event if inventory present:
@@ -12,7 +16,7 @@ local function destroy_all_corpses(info)
   end
 end
 
--- Helper function for destroying all corpses and spilling inventories unto the ground:
+-- For use with item drops turned on.
 local function destroy_all_corpses_and_spill_inventories(info)
   local surface = info.surface
   local corpses = info.corpses
@@ -35,7 +39,7 @@ local function destroy_all_corpses_and_spill_inventories(info)
   end
 end
 
--- Main function for clearing area of decoratives and corpses (configurable):
+-- Main function for clearing area (configurable).
 local function clear_area(info)
   local surface = info.surface
   local area    = info.area
@@ -72,9 +76,9 @@ local function clear_area(info)
   end
 end
 
--- EVENTS
+-- SCRIPTS: CLEAR AREA WITH AREA SELECTION TOOL --
 
--- Clears decoratives and corpses with normal selection mode:
+-- Clears decoratives and corpses with the normal selection mode.
 script.on_event({
     defines.events.on_player_selected_area,
 }, function(event)
@@ -85,7 +89,7 @@ script.on_event({
   })
 end)
 
--- Only clears corpses with alternative selection mode:
+-- Clears corpses only with the alternative selection mode.
 script.on_event({
     defines.events.on_player_alt_selected_area
 }, function(event)
@@ -97,7 +101,9 @@ script.on_event({
   })
 end)
 
--- Clears decoratives and corpses when placing down entities/tiles:
+-- SCRIPTS: CLEAR AREA WHEN BUILDING --
+
+-- Clears decoratives and corpses when placing down entities/tiles.
 script.on_event({
     defines.events.on_built_entity,
     defines.events.on_robot_built_entity,
@@ -118,9 +124,10 @@ script.on_event({
   })
 end)
 
--- SETTINGS & INITIALIZATION
 
--- Caches values of settings, improving performance with many mods:
+-- SCRIPTS: STORAGE TABLE INITIALIZATION & CACHING OF SETTINGS --
+
+-- Caches values of settings, improving performance especially with many mods.
 local function cacheSettings()
   storage.settings = {}
   storage.settings.lawnmower_building_clear_range =
@@ -145,3 +152,5 @@ end)
 script.on_configuration_changed(function()
   cacheSettings()
 end)
+
+--------------------------------------------------------------------------------

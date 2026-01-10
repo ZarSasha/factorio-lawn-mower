@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.0
-Date: 2026-01-10
+Date: 2026-01-11
   Major Features:
     - the alternative selection option (shift + left click) now removes only corpses.
   Minor Features:
@@ -10,9 +10,11 @@ Date: 2026-01-10
     - now raises an event when corpses with an inventory are destroyed, just in case other mods
       need to know.
     - compacted code, tidied up formatting, simplified mod structure.
+  Info:
+    - updated name and description of item drop setting to reflect a new script method.
   Bugfixes:
     - fixed issue with corpses not dropping any items on the ground when removed, even when the
-      setting for it is enabled (still not made to work on character corpses).
+      setting for it is enabled (won't work on character corpses, btw).
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 2025-06-12
