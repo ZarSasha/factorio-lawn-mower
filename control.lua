@@ -44,17 +44,18 @@ local function clear_area(info)
   local surface = info.surface
   local area    = info.area
   local range   = info.range or 0
-  -- Clears area of decoratives, optionally with bonus range:
+  -- Optionally increases size of area:
   if range > 0 then
     area.left_top.x     = area.left_top.x     - range
     area.left_top.y     = area.left_top.y     - range
     area.right_bottom.x = area.right_bottom.x + range
     area.right_bottom.y = area.right_bottom.y + range
   end
+  -- Clears decoratives:
   surface.destroy_decoratives({
     area = area
   })
-  -- Clears area of corpses, optionally dropping any items:
+  -- Clears corpses, optionally dropping any items:
   local corpses = surface.find_entities_filtered({
     area = area,
     type = "corpse"
