@@ -11,7 +11,7 @@ local function clear_area(info)
   surface.destroy_decoratives({area = area})
 
   if not storage.settings.lawnmower_drop_minable_items then return end
-  local corpses = surface.find_entities_filtered({area = area, type = "corpse"})
+  local corpses = surface.find_entities_filtered({area = area, type = {"corpse", "character-corpse"}})
   if corpses == {} then return end
   for _, corpse in pairs(corpses) do
     local pos = corpse.position
