@@ -1,39 +1,35 @@
 local function destroy_all_corpses(info)
   local corpses = info.corpses
-  -- Clears corpses, raising event if minable.
+  -- Clears corpses, raising event if there is an inventory:
   for _, corpse in pairs(corpses) do
-    if corpse.minable then
-      corpse.destroy({
-        raise_destroy = true -- just in case
-      })
-    else
-      corpse.destroy()
-    end
+    local inventory = corpse.get_inventory(1) -- assumes one inventory
+    if not inventory then corpse.destroy() goto continue end
+    corpse.destroy({
+      raise_destroy = true -- just in case
+    })
+    ::continue::
   end
 end
 
-local function destroy_all_corpses_and_drop_any_items(info)
+local function destroy_all_corpses_and_spill_inventories(info)
   local surface = info.surface
   local corpses = info.corpses
-  -- Clears corpses, raising event and dropping items if minable:
+  -- Clears corpses, raising event and spilling inventories:
   for _, corpse in pairs(corpses) do
-    if corpse.minable then
-      for i = 1, 11 do
-        local single_inventory = corpse.get_inventory(i)
-        if single_inventory == nil then break end
-        surface.spill_inventory({
-          inventory     = single_inventory,
-          position      = corpse.position,
-          allow_belts   = false,
-          enable_looted = true,
-        })
-      end
-      corpse.destroy({
-        raise_destroy = true -- just in case
-      })
-    else
-      corpse.destroy()
+    local inventory = corpse.get_inventory(1) -- assumes one inventory
+    if not inventory then
+      corpse.destroy() goto continue
     end
+    surface.spill_inventory({
+      inventory     = inventory,
+      position      = corpse.position,
+      allow_belts   = false, -- not moved by existing belts
+      enable_looted = true,  -- walk over to pick up
+    })
+    corpse.destroy({
+      raise_destroy = true -- just in case
+    })
+    ::continue::
   end
 end
 
@@ -52,14 +48,14 @@ local function clear_area(info)
   surface.destroy_decoratives({
     area = area
   })
-  -- Clears corpses, optionally dropping any items:
+  -- Clears corpses, optionally spilling inventories:
   local corpses = surface.find_entities_filtered({
     area = area,
     type = "corpse"
   })
   if corpses == {} then return end
   if storage.settings.lawnmower_drop_minable_items then
-    destroy_all_corpses_and_drop_any_items({
+    destroy_all_corpses_and_spill_inventories({
       surface = surface,
       corpses = corpses
     })
@@ -84,13 +80,12 @@ script.on_event({
 end)
 
 script.on_event({
-    defines.events.on_built_entity,       -- entity
-    defines.events.on_robot_built_entity, -- entity
-    defines.events.script_raised_built,   -- entity
-    defines.events.script_raised_revive,  -- entity
-    defines.events.on_entity_cloned       -- destination
+    defines.events.on_built_entity,
+    defines.events.on_robot_built_entity,
+    defines.events.script_raised_built,
+    defines.events.script_raised_revive
 }, function(event)
-  local entity = event.entity or event.destination
+  local entity = event.entity
   if entity == nil or
      entity.type == "entity-ghost" or
      entity.type == "tile-ghost" or

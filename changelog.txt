@@ -4,7 +4,8 @@ Date: 2026-01-10
   Minor Features:
     - items dropped by corpses upon removal can now be picked up by walking over them, and they
       won't be moved by any existing conveyor belts.
-    - removal of decoratives and corpses also work with entity cloning now.
+    - removal of decoratives and corpses also work with entity cloning now (this is only relevant
+      for cloning with the in-game editor and similar functions from various mods).
   Changes:
     - compacted code, tidied up formatting, simplified mod structure.
     - now raises an event when minable corpses are destroyed, just in case other mods need to know.

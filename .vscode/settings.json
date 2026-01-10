@@ -1,0 +1,11 @@
+{
+    "Lua.diagnostics.globals": [
+        "data",
+        "storage",
+        "defines",
+        "script",
+        "game",
+        "settings"
+    ],
+    "editor.indentSize": 2,
+}
