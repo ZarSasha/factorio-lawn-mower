@@ -120,6 +120,7 @@ end)
 
 -- SETTINGS & INITIALIZATION
 
+-- Caches values of settings, improving performance with many mods:
 local function cacheSettings()
   storage.settings = {}
   storage.settings.lawnmower_building_clear_range =
@@ -144,6 +145,3 @@ end)
 script.on_configuration_changed(function()
   cacheSettings()
 end)
-
--- [ZarSasha]: Caching the values of settings like this isn't really needed.
--- It does improve performance, but it's not a big difference.
