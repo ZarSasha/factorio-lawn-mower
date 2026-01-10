@@ -16,7 +16,7 @@ local function clear_area(info)
     if not corpse.minable then goto continue end
     local temp_inventory = game.create_inventory(0)
     corpse.mine({inventory = temp_inventory})
-    corpse.spill_inventory({
+    surface.spill_inventory({
       inventory     = temp_inventory,
       position      = corpse.position,
       allow_belts   = false, -- needed?
