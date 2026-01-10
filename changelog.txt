@@ -1,12 +1,14 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.5
-Date: 2027-01-10
+Date: 2026-01-10
   Changes:
-    - TODO: Check and fix issue with corpse inventory.
-    - TODO: Fix alt-select area cleaning not working at all.
-    - Compacted and tidied up code.
+    - Compacted script code and tidied up formatting in general.
+    - Now raises an event if minable corpses are destroyed, just in case other mods need to know.
+  Minor Features:
+    - Made sure that items dropped when deleting corpses can be easily picked up by player, but
+      also won't be moved by existing conveyor belts.
   Bugfixes:
-    - Fixed issue with corpses not dropping items on ground if they have an inventory.
+    - Fixed issue with mineable corpses not dropping any items on the ground when deleted.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 2025-06-12
