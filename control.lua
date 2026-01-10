@@ -12,7 +12,7 @@ local function clear_area(info)
 
   if not storage.settings.lawnmower_drop_minable_items then return end
   local corpses = surface.find_entities_filtered({area = area, type = "corpse"})
-  if corpses == {} then return end
+  if corpses == nil or corpses == {} then return end
   for _, corpse in pairs(corpses) do
     if not corpse.minable then goto continue end
     local temp_inventory = game.create_inventory(0)
