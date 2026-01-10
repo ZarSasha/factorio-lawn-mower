@@ -14,17 +14,19 @@ local function clear_area(info)
   local corpses = surface.find_entities_filtered({area = area, type = "corpse"})
   if corpses == {} then return end
   for _, corpse in pairs(corpses) do
-    if corpse.minable then
-        local pos = corpse.position
-      for i = 1, 11 do
-        surface.spill_inventory({
-          inventory     = corpse.get_inventory(i),
-          position      = pos,
-          allow_belts   = false, -- needed?
-          enable_looted = true,  -- needed?
-        })
-      end
+    local pos = corpse.position
+    if not corpse.minable then goto continue end
+    for i = 1, 11 do
+      local inv = corpse.get_inventory(i)
+      if inv == nil then return end
+      surface.spill_inventory({
+        inventory     = inv,
+        position      = pos,
+        allow_belts   = false, -- needed?
+        enable_looted = true,  -- needed?
+      })
     end
+    ::continue::
     corpse.destroy({raise_destroy = true}) -- raises event just in case
   end
 end
