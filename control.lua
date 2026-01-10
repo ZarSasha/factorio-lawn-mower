@@ -22,8 +22,8 @@ local function clear_area(info)
         surface.spill_inventory({
           inventory     = inv,
           position      = pos,
-          --allow_belts   = false, -- needed?
-          --enable_looted = true,  -- needed?
+          allow_belts   = false, -- items will not be picked up or moved by belts
+          enable_looted = true,  -- items can be picked up by player walking over them
         })
       end
     end
