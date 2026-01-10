@@ -1,6 +1,6 @@
 local function destroy_all_corpses(corpses)
   for _, corpse in pairs(corpses) do
-    if not corpse.minable then corpse.destroy() goto continue end
+    if corpse.minable == nil then corpse.destroy() goto continue end
     corpse.destroy({raise_destroy = true}) -- raising event just in case
     ::continue::
   end
@@ -8,7 +8,7 @@ end
 
 local function destroy_all_corpses_and_drop_items(surface, corpses)
   for _, corpse in pairs(corpses) do
-    if not corpse.mineable then corpse.destroy() goto continue end
+    if corpse.mineable == nil then corpse.destroy() goto continue end
     for i = 1, 11 do
       local single_inventory = corpse.get_inventory(i)
       if single_inventory == nil then return end
