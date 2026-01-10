@@ -25,6 +25,12 @@ data:extend({
       cursor_box_type = "not-allowed",
       -- "blueprint-snap-rectangle"
     },
+    ["alt-select"] = {
+      mode = {"nothing"},
+      border_color = {r = 0.125, g = 0.447, b = 0.13, a = 0.051},
+      cursor_box_type = "not-allowed",
+      -- "blueprint-snap-rectangle"
+    },
     flags = { "only-in-cursor", "not-stackable", "spawnable" }
   }
 })
