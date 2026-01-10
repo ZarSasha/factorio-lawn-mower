@@ -64,7 +64,7 @@ local function clear_area(info)
   -- Clears corpses, optionally drops any items:
   local corpses = surface.find_entities_filtered({
     area = area,
-    type = "corpse"
+    type = "character-corpse"
   })
   if corpses == {} then return end
   if storage.settings.lawnmower_drop_minable_items then
