@@ -8,7 +8,7 @@ Date: 2026-01-10
     - Made sure that items dropped when deleting corpses can be easily picked up by player, but
       also won't be moved by existing conveyor belts.
   Bugfixes:
-    - Fixed issue with mineable corpses not dropping any items on the ground when deleted.
+    - Fixed issue with minable corpses not dropping any items on the ground when deleted.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 2025-06-12
