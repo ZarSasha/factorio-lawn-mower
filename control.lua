@@ -1,3 +1,30 @@
+local function destroy_all_corpses(corpses)
+  for _, corpse in pairs(corpses) do
+    if not corpse.minable then corpse.destroy() goto continue end
+    corpse.destroy({raise_destroy = true}) -- raising event just in case
+    ::continue::
+  end
+end
+
+local function destroy_all_corpses_and_drop_items(surface, corpses)
+  for _, corpse in pairs(corpses) do
+    if not corpse.mineable then corpse.destroy() goto continue end
+    for i = 1, 11 do
+      local single_inventory = corpse.get_inventory(i)
+      if single_inventory == nil then return end
+      surface.spill_inventory({
+        inventory     = single_inventory,
+        position      = corpse.position,
+        allow_belts   = false, -- dropped items will not be picked up by existing belts
+        enable_looted = true,  -- dropped items can be picked up simply by walking over them
+      })
+    end
+    corpse.destroy({raise_destroy = true}) -- raising event just in case
+    ::continue::
+  end
+end
+
+
 local function clear_area(info)
   local surface = info.surface
   local area    = info.area
@@ -8,26 +35,15 @@ local function clear_area(info)
     area.right_bottom.x = area.right_bottom.x + range
     area.right_bottom.y = area.right_bottom.y + range
   end
+
   surface.destroy_decoratives({area = area})
 
   local corpses = surface.find_entities_filtered({area = area, type = "character-corpse"})
   if corpses == {} then return end
-  local drop_items = storage.settings.lawnmower_drop_minable_items
-  for _, corpse in pairs(corpses) do
-    if drop_items and corpse.minable then
-      local pos = corpse.position
-      for i = 1, 11 do
-        local inv = corpse.get_inventory(i)
-        if inv == nil then return end
-        surface.spill_inventory({
-          inventory     = inv,
-          position      = pos,
-          allow_belts   = false, -- items will not be picked up by existing belts
-          enable_looted = true,  -- items can be picked up by player walking over them
-        })
-      end
-    end
-    corpse.destroy()
+  if storage.settings.lawnmower_drop_minable_items then
+    destroy_all_corpses_and_drop_items(surface, corpses)
+  else
+    destroy_all_corpses(corpses)
   end
 end
 
@@ -43,32 +59,6 @@ script.on_event({
     area    = event.area
   })
 end)
-
---[[ 
-local function on_selected_area(event)
-  if event.item ~= "lawnmower-lawnmower" then return end
-  local surface = event.surface
-  local area = event.area
-  clear_area(surface, area)
-end
-
-function on_selected_area(event, alt_selected) -- second arg not used for anything!
-  if (event.item ~= "lawnmower-lawnmower") then return end
-
-  local surface = event.surface
-  local area = event.area
-
-  clear_area(surface, area)
-end
-
-script.on_event(defines.events.on_player_selected_area, function(event)
-  on_selected_area(event, false)
-end)
-
-script.on_event(defines.events.on_player_alt_selected_area, function(event)
-  on_selected_area(event, true)
-end)
-]]
 
 script.on_event({
     defines.events.on_built_entity,       -- entity
@@ -90,61 +80,6 @@ script.on_event({
     range   = storage.settings.lawnmower_building_clear_range
   })
 end)
-
---[[ 
-script.on_event(defines.events.on_built_entity, function(event)
-  if event.entity == nil or
-     event.entity.type == "entity-ghost" or
-     event.entity.type == "tile-ghost" or
-     not event.entity.prototype.selectable_in_game then
-      return
-  end
-
-  local surface = game.surfaces[event.entity.surface_index]
-  local area = event.entity.selection_box
-
-  clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
-end)
-
-script.on_event(defines.events.on_robot_built_entity, function(event)
-  if event.entity.type == "entity-ghost" or
-     event.entity.type == "tile-ghost" or
-     not event.entity.prototype.selectable_in_game then
-      return
-  end
-
-  local surface = game.surfaces[event.entity.surface_index]
-  local area = event.entity.selection_box
-
-  clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
-end)
-
-script.on_event(defines.events.script_raised_built, function(event)
-  if event.entity.type == "entity-ghost" or
-     event.entity.type == "tile-ghost" or
-     not event.entity.prototype.selectable_in_game then
-      return
-  end
-
-  local surface = game.surfaces[event.entity.surface_index]
-  local area = event.entity.selection_box
-
-  clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
-end)
-
-script.on_event(defines.events.script_raised_revive, function(event)
-  if event.entity.type == "entity-ghost" or
-     event.entity.type == "tile-ghost" or
-     not event.entity.prototype.selectable_in_game then
-      return
-  end
-
-  local surface = game.surfaces[event.entity.surface_index]
-  local area = event.entity.selection_box
-
-  clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
-end)
-]]
 
 -- SETTINGS & INITIALIZATION
 
