@@ -1,31 +1,30 @@
-function clear_area(info)
+local function clear_area(info)
   local surface = info.surface
   local area    = info.area
   local range   = info.range or 0
   if range > 0 then
-    area.left_top.x = area.left_top.x - range
-    area.left_top.y = area.left_top.y - range
+    area.left_top.x     = area.left_top.x     - range
+    area.left_top.y     = area.left_top.y     - range
     area.right_bottom.x = area.right_bottom.x + range
     area.right_bottom.y = area.right_bottom.y + range
   end
   surface.destroy_decoratives({area = area})
 
-  local temp_inventory -- was nil, which just deletes variable in lua!
-  if storage.settings.lawnmower_drop_minable_items then
-    temp_inventory = game.create_inventory(0)
-  end
+  if not storage.settings.lawnmower_drop_minable_items then return end
 
   local corpses = surface.find_entities_filtered({area = area, type = "corpse"})
   for _, corpse in pairs(corpses) do
-    if corpse.minable and storage.settings.lawnmower_drop_minable_items then
-      local position = corpse.position                          -- not used for anything!
-      local result = corpse.mine{inventory = temp_inventory}    -- not used for anything!
-    end
-    corpse.destroy()
-  end
-
-  if storage.settings.lawnmower_drop_minable_items then
-    temp_inventory.destroy()
+    if not corpse.minable then goto continue end
+    local inv = corpse.get_inventory()
+    if inv == nil or inv.is_empty() then goto continue end
+    corpse.spill_inventory({
+      inventory = corpse.inv,
+      position = corpse.position,
+      allow_belts = false,  -- needed?
+      enable_looted = true, -- needed?
+    })
+    corpse.destroy({raise_destroy = true}) -- raises event just in case
+    ::continue::
   end
 end
 
@@ -146,7 +145,7 @@ end)
 
 -- SETTINGS & INITIALIZATION
 
-function cacheSettings()
+local function cacheSettings()
   storage.settings = {}
   storage.settings.lawnmower_building_clear_range =
     settings.global["lawnmower-building-clear-range"].value
