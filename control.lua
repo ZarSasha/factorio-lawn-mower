@@ -21,14 +21,14 @@ end
 local function destroy_all_corpses_and_drop_items(info)
   local surface = info.surface
   local corpses = info.corpses
-  -- Clears corpses, raises event if minable and drops items on ground:
+  -- Clears corpses, mining them if possible and dropping items on ground:
   for _, corpse in pairs(corpses) do
     if not corpse.minable then
       corpse.destroy() goto continue
     end
-    local temp_inventory = game.create_inventory(10) -- enough? enough
+    local temp_inventory = game.create_inventory(100) -- enough? enough.
     local position = corpse.position
-    corpse.mine({ -- deletes corpse when fully emptied
+    corpse.mine({ -- deletes corpse once fully emptied
       inventory = temp_inventory
     })
     surface.spill_inventory({
