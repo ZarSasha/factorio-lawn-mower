@@ -1,12 +1,12 @@
 -- Helper function for destroying all corpses:
 local function destroy_all_corpses(info)
   local corpses = info.corpses
-  -- Clears corpses, raises event if inventory:
+  -- Clears corpses, raises event if inventory present:
   for _, corpse in pairs(corpses) do
     local inventory = corpse.get_inventory(1) -- assumes one inventory
     if not inventory then corpse.destroy() goto continue end
     corpse.destroy({
-      raise_destroy = true -- just in case
+      raise_destroy = true -- informs other mods, just in case
     })
     ::continue::
   end
@@ -16,7 +16,7 @@ end
 local function destroy_all_corpses_and_spill_inventories(info)
   local surface = info.surface
   local corpses = info.corpses
-  -- Clears corpses, raises event if inventory, spills inventories:
+  -- Clears corpses, raises event if inventory present and spills contents:
   for _, corpse in pairs(corpses) do
     local inventory = corpse.get_inventory(1) -- assumes one inventory
     if not inventory then
@@ -29,19 +29,19 @@ local function destroy_all_corpses_and_spill_inventories(info)
       enable_looted = true,  -- walk over to pick up
     })
     corpse.destroy({
-      raise_destroy = true -- just in case
+      raise_destroy = true -- informs other mods, just in case
     })
     ::continue::
   end
 end
 
--- Main function for clearing area of decoratives and corpses depending on configuration:
+-- Main function for clearing area of decoratives and corpses (configurable):
 local function clear_area(info)
   local surface = info.surface
   local area    = info.area
   local range   = info.range or 0
   local alt     = info.alt or false
-  -- Optionally increases size of area:
+  -- Optionally increases size of affected area:
   if range > 0 then
     area.left_top.x     = area.left_top.x     - range
     area.left_top.y     = area.left_top.y     - range
@@ -60,7 +60,7 @@ local function clear_area(info)
     type = "corpse"
   })
   if corpses == {} then return end
-  if storage.settings.lawnmower_drop_minable_items then
+  if settings.global["lawnmower-drop-minable-items"].value then
     destroy_all_corpses_and_spill_inventories({
       surface = surface,
       corpses = corpses
@@ -97,7 +97,7 @@ script.on_event({
   })
 end)
 
--- Clears decoratives and corpses in a defined area around entities when built:
+-- Clears decoratives and corpses when placing down entities/tiles:
 script.on_event({
     defines.events.on_built_entity,
     defines.events.on_robot_built_entity,
@@ -114,12 +114,12 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = storage.settings.lawnmower_building_clear_range
+    range   = settings.global["lawnmower-building-clear-range"].value
   })
 end)
 
 -- SETTINGS & INITIALIZATION
-
+--[[
 local function cacheSettings()
   storage.settings = {}
   storage.settings.lawnmower_building_clear_range =
@@ -144,3 +144,4 @@ end)
 script.on_configuration_changed(function()
   cacheSettings()
 end)
+]]
