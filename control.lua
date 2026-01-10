@@ -8,28 +8,47 @@ function clear_area(surface, area, range)
   end
   surface.destroy_decoratives({area = area})
 
-  local temp_inventory
-  if (storage.settings.lawnmower_drop_minable_items) then
+  local temp_inventory -- was nil, which just deletes variable in lua!
+  if storage.settings.lawnmower_drop_minable_items then
     temp_inventory = game.create_inventory(0)
   end
 
-  local corpses = surface.find_entities_filtered({area = area, type="corpse"})
+  local corpses = surface.find_entities_filtered({area = area, type = "corpse"})
   for _, corpse in pairs(corpses) do
     if corpse.minable and storage.settings.lawnmower_drop_minable_items then
-      local position = corpse.position
-      local result = corpse.mine{inventory = temp_inventory}
+      local position = corpse.position                          -- not used for anything!
+      local result = corpse.mine{inventory = temp_inventory}    -- not used for anything!
     end
     corpse.destroy()
   end
 
-  if (storage.settings.lawnmower_drop_minable_items) then
+  if storage.settings.lawnmower_drop_minable_items then
     temp_inventory.destroy()
   end
 end
 
 -- EVENTS
 
-function on_selected_area(event, alt_selected)
+script.on_event({
+    defines.events.on_player_selected_area,
+    defines.events.on_player_alt_selected_area
+}, function(event)
+  if event.item ~= "lawnmower-lawnmower" then return end
+  clear_area(
+    event.surface,
+    event.area
+  )
+end)
+
+--[[ 
+local function on_selected_area(event)
+  if event.item ~= "lawnmower-lawnmower" then return end
+  local surface = event.surface
+  local area = event.area
+  clear_area(surface, area)
+end
+
+function on_selected_area(event, alt_selected) -- second arg not used for anything!
   if (event.item ~= "lawnmower-lawnmower") then return end
 
   local surface = event.surface
@@ -45,7 +64,28 @@ end)
 script.on_event(defines.events.on_player_alt_selected_area, function(event)
   on_selected_area(event, true)
 end)
+]]
 
+script.on_event({
+    defines.events.on_built_entity,
+    defines.events.on_robot_built_entity,
+    defines.events.script_raised_built,
+    defines.events.script_raised_revive,
+}, function(event)
+  if event.entity == nil or
+    event.entity.type == "entity-ghost" or
+    event.entity.type == "tile-ghost" or
+    not event.entity.prototype.selectable_in_game then
+    return
+  end
+  clear_area(
+    game.surfaces[event.entity.surface_index],
+    event.entity.selection_box,
+    storage.settings.lawnmower_building_clear_range
+  )
+end)
+
+--[[ 
 script.on_event(defines.events.on_built_entity, function(event)
   if event.entity == nil or
      event.entity.type == "entity-ghost" or
@@ -98,13 +138,16 @@ script.on_event(defines.events.script_raised_revive, function(event)
 
   clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
 end)
+]]
 
 -- SETTINGS & INITIALIZATION
 
 function cacheSettings()
   storage.settings = {}
-  storage.settings.lawnmower_building_clear_range = settings.global["lawnmower-building-clear-range"].value
-  storage.settings.lawnmower_drop_minable_items = settings.global["lawnmower-drop-minable-items"].value
+  storage.settings.lawnmower_building_clear_range =
+    settings.global["lawnmower-building-clear-range"].value
+  storage.settings.lawnmower_drop_minable_items =
+    settings.global["lawnmower-drop-minable-items"].value
 end
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
@@ -112,7 +155,6 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
      event.setting ~= "lawnmower-drop-minable-items" then
       return
   end
-
   cacheSettings()
 end)
 
