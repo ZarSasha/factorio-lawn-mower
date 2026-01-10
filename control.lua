@@ -7,12 +7,12 @@ function clear_area(surface, area, range)
     area.right_bottom.y = area.right_bottom.y + range
   end
   surface.destroy_decoratives({area = area})
-  
-  local temp_inventory = nil
+
+  local temp_inventory
   if (storage.settings.lawnmower_drop_minable_items) then
     temp_inventory = game.create_inventory(0)
   end
-  
+
   local corpses = surface.find_entities_filtered({area = area, type="corpse"})
   for _, corpse in pairs(corpses) do
     if corpse.minable and storage.settings.lawnmower_drop_minable_items then
@@ -21,7 +21,7 @@ function clear_area(surface, area, range)
     end
     corpse.destroy()
   end
-  
+
   if (storage.settings.lawnmower_drop_minable_items) then
     temp_inventory.destroy()
   end
@@ -31,10 +31,10 @@ end
 
 function on_selected_area(event, alt_selected)
   if (event.item ~= "lawnmower-lawnmower") then return end
-  
+
   local surface = event.surface
   local area = event.area
-  
+
   clear_area(surface, area)
 end
 
@@ -53,10 +53,10 @@ script.on_event(defines.events.on_built_entity, function(event)
      not event.entity.prototype.selectable_in_game then
       return
   end
-  
+
   local surface = game.surfaces[event.entity.surface_index]
   local area = event.entity.selection_box
-  
+
   clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
 end)
 
@@ -66,10 +66,10 @@ script.on_event(defines.events.on_robot_built_entity, function(event)
      not event.entity.prototype.selectable_in_game then
       return
   end
-  
+
   local surface = game.surfaces[event.entity.surface_index]
   local area = event.entity.selection_box
-  
+
   clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
 end)
 
@@ -79,10 +79,10 @@ script.on_event(defines.events.script_raised_built, function(event)
      not event.entity.prototype.selectable_in_game then
       return
   end
-  
+
   local surface = game.surfaces[event.entity.surface_index]
   local area = event.entity.selection_box
-  
+
   clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
 end)
 
@@ -92,10 +92,10 @@ script.on_event(defines.events.script_raised_revive, function(event)
      not event.entity.prototype.selectable_in_game then
       return
   end
-  
+
   local surface = game.surfaces[event.entity.surface_index]
   local area = event.entity.selection_box
-  
+
   clear_area(surface, area, storage.settings.lawnmower_building_clear_range)
 end)
 
@@ -112,7 +112,7 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
      event.setting ~= "lawnmower-drop-minable-items" then
       return
   end
-  
+
   cacheSettings()
 end)
 
