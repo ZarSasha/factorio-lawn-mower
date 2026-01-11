@@ -2,11 +2,11 @@
 Version: 0.2.0
 Date: 2026-01-11
   Major Features:
-    - the alternate selection option (shift + left click by default) now clears only corpses.
+    - the alternative selection option (shift + left click by default) now clears only corpses.
   Minor Features:
-    - items dropped from cleared corpses can now be picked up by walking over them, and they won't
-      be dropped unto nearby conveyor belts.
-    - added option to declare a key sequence as a shortcut for the lawnmower.
+    - items dropped from cleared corpses can be picked up by walking over them, and they won't be
+      dropped unto nearby conveyor belts.
+    - added option to set a key binding for quick access to the lawnmower tool.
   Changes:
     - compacted code, tidied up formatting, simplified mod structure.
     - now raises an event if minable corpses are removed with .destroy(), just in case other mods
@@ -17,11 +17,11 @@ Date: 2026-01-11
   Info:
     - added name for spawned lawnmower item for correct display in factoriopedia.
     - added instructions to lawnmower selection tool shortcut.
+    - changed mod description.
   Gui:
     - differentiated colors for lawnmower area selection borders depending on mode.
   Sounds:
-    - added sound effects for the use of the lawnmower selection tool (same as those of the
-      deconstruction planner).
+    - added sound effects for lawnmower selection tool (same as those of deconstruction planner).
   Bugfixes:
     - fixed issue with minable corpses not dropping any items on the ground when cleared, even when
       the setting for it is enabled.

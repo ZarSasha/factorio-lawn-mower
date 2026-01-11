@@ -79,7 +79,7 @@ local function clear_area(info)
   end
 end
 
--- SCRIPTS: CLEAR AREA WITH AREA SELECTION TOOL --
+-- SCRIPTS: CLEAR AREA WITH LAWNMOWER AREA SELECTION TOOL --
 
 -- Clears decoratives and corpses with the normal selection mode.
 script.on_event({
@@ -92,7 +92,7 @@ script.on_event({
   })
 end)
 
--- Clears corpses only with the alternate selection mode.
+-- Clears corpses only with the alternative selection mode.
 script.on_event({
   defines.events.on_player_alt_selected_area
 }, function(event)
