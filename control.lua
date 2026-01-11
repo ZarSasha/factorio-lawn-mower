@@ -70,7 +70,7 @@ local function clear_area(info)
   -- Clears corpses, optionally drops any items:
   local corpses = surface.find_entities_filtered({
     area = area,
-    type = "corpse"
+    type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
   })
   if corpses == {} then return end
   if cache.settings.drop_items then
