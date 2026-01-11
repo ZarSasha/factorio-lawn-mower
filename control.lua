@@ -142,7 +142,7 @@ end)
 -- STORAGE TABLE INITIALIZATION & CACHING OF VALUES FROM SETTINGS --
 
 local function cacheSettings()
-  storage.settings = {} -- no preservation, simple reset
+  storage.settings = {} -- simple reset
   storage.settings.building_clear_range =
     settings.global["lawnmower-building-clear-range"].value
   storage.settings.drop_minable_items =
