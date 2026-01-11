@@ -2,19 +2,20 @@
 Version: 0.2.0
 Date: 2026-01-11
   Major Features:
-    - the alternative selection option (shift + left click by default) now clears only corpses.
+    - the alternate selection option (shift + left click by default) now clears only corpses.
   Minor Features:
     - items dropped from cleared corpses can now be picked up by walking over them, and they won't
       be dropped unto nearby conveyor belts.
   Changes:
-    - now raises an event if minable corpses are technically destroyed, just in case other mods
+    - now raises an event if minable corpses are removed with .destroy(), just in case other mods
       need to know.
     - compacted code, tidied up formatting, simplified mod structure.
-    - now uses local variables instead of storage to cache values from settings, since nothing
-      needs to be preserved through the save/load cycle. Performance improved.
+  Optimizations:
+    - now just uses local variables instead of storage to cache values from settings at runtime,
+      since nothing was or has to be preserved through the save/load cycle (improves performance).
   Bugfixes:
-    - fixed issue with corpses not dropping any items on the ground when cleared, even when the
-      setting for it is enabled (won't work on character corpses, btw).
+    - fixed issue with minable corpses not dropping any items on the ground when cleared, even when
+      the setting for it is enabled (still won't work on character corpses, btw).
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 2025-06-12

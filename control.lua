@@ -1,14 +1,14 @@
 --------------------------------------------------------------------------------
--- CLEARING AREA OF DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
+-- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
--- Cached values from settings.
-local SET = {
+-- Caches values from settings.
+local cache = { settings = {
   clear_range = settings.global["lawnmower-building-clear-range"].value,
-  drop_items  = settings.global["lawnmower-drop-minable-items"].value
-}
+  drop_items  = settings.global["lawnmower-drop-minable-items"  ].value
+}}
 
--- For use with item drops turned off.
+-- Function for destroying corpses (items drops OFF).
 local function destroy_all_corpses(info)
   local corpses = info.corpses
   -- Clears corpses, raises event if minable:
@@ -23,7 +23,7 @@ local function destroy_all_corpses(info)
   end
 end
 
--- For use with item drops turned on.
+-- Function for destroying corpses (items drops ON).
 local function destroy_all_corpses_and_drop_items(info)
   local surface = info.surface
   local corpses = info.corpses
@@ -32,12 +32,12 @@ local function destroy_all_corpses_and_drop_items(info)
     if not corpse.minable then
       corpse.destroy() goto continue
     end
-    local temp_inventory = game.create_inventory(160) -- enough? enough.
+    local temp_inventory = game.create_inventory(100) -- enough? enough.
     local position = corpse.position
-    corpse.mine({ -- deletes corpse once fully emptied
+    corpse.mine({ -- corpse remains until fully emptied
       inventory = temp_inventory
     })
-    surface.spill_inventory({
+    surface.spill_inventory({ -- available since v2.0.51.
       inventory     = temp_inventory,
       position      = position,
       allow_belts   = false, -- not dropped on existing belts
@@ -73,7 +73,7 @@ local function clear_area(info)
     type = "corpse"
   })
   if corpses == {} then return end
-  if settings.global["lawnmower-drop-minable-items"].value then
+  if cache.settings.drop_items then
     destroy_all_corpses_and_drop_items({
       surface = surface,
       corpses = corpses
@@ -98,7 +98,7 @@ script.on_event({
   })
 end)
 
--- Clears corpses only with the alternative selection mode.
+-- Clears corpses only with the alternate selection mode.
 script.on_event({
     defines.events.on_player_alt_selected_area
 }, function(event)
@@ -110,7 +110,7 @@ script.on_event({
   })
 end)
 
--- SCRIPTS: CLEAR AREA WHEN BUILDING --
+-- SCRIPTS: CLEAR VICINITY WHEN BUILDING --
 
 -- Clears decoratives and corpses when placing down entities/tiles.
 script.on_event({
@@ -129,37 +129,8 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = settings.global["lawnmower-building-clear-range"].value
+    range   = cache.settings.clear_range
   })
-end)
-
-
--- SCRIPTS: STORAGE TABLE INITIALIZATION & CACHING OF SETTINGS --
-
--- Caches values of settings, improving performance especially with many mods.
-local function cacheSettings()
-  storage.settings = {}
-  storage.settings.lawnmower_building_clear_range =
-    settings.global["lawnmower-building-clear-range"].value
-  storage.settings.lawnmower_drop_minable_items =
-    settings.global["lawnmower-drop-minable-items"].value
-end
-
-script.on_event(
-  defines.events.on_runtime_mod_setting_changed, function(event)
-  if event.setting ~= "lawnmower-building-clear-range" and
-     event.setting ~= "lawnmower-drop-minable-items" then
-    return
-  end
-  cacheSettings()
-end)
-
-script.on_init(function()
-  cacheSettings()
-end)
-
-script.on_configuration_changed(function()
-  cacheSettings()
 end)
 
 --------------------------------------------------------------------------------
