@@ -81,9 +81,13 @@ end
 
 -- Function for playing sound for lawnmowing (needed since none of the deleted
 -- objects will trigger the "ended_sound" for the selection tool).
-local function play_lawnmower_end_sound(event)
+local function play_lawnmower_end_sound(info)
+  local event = info.event
+  local alt   = info.alt
+  local name = alt and "lawnmower-lawnmowing-alt-end" or
+    "lawnmower-lawnmowing-end"
   game.players[event.player_index].play_sound({
-    path = "lawnmower-lawnmowing-end",
+    path = name,
     position = event.area.left_top}
   )
 end
@@ -95,7 +99,9 @@ script.on_event({
     defines.events.on_player_selected_area,
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
-  play_lawnmower_end_sound(event)
+  play_lawnmower_end_sound({
+    event = event
+  })
   clear_area({
     surface = event.surface,
     area    = event.area
@@ -107,7 +113,10 @@ script.on_event({
     defines.events.on_player_alt_selected_area
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
-  play_lawnmower_end_sound(event)
+  play_lawnmower_end_sound({
+    event = event,
+    alt   = true
+  })
   clear_area({
     surface = event.surface,
     area    = event.area,
