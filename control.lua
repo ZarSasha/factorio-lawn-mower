@@ -86,6 +86,10 @@ script.on_event({
     defines.events.on_player_selected_area,
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
+  game.player.play_sound({
+    path = "lawnmower-lawnmowing-end",
+    position = event.area.left_top}
+  )
   clear_area({
     surface = event.surface,
     area    = event.area
@@ -97,6 +101,10 @@ script.on_event({
     defines.events.on_player_alt_selected_area
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
+  game.player.play_sound({
+    path = "lawnmower-lawnmowing-end",
+    position = event.area.left_top}
+  )
   clear_area({
     surface = event.surface,
     area    = event.area,
