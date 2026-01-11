@@ -10,6 +10,8 @@ Date: 2026-01-11
     - now raises an event if minable corpses are removed with .destroy(), just in case other mods
       need to know.
     - compacted code, tidied up formatting, simplified mod structure.
+  Gui:
+    - Added instructions to lawnmower shortcut.
   Bugfixes:
     - fixed issue with minable corpses not dropping any items on the ground when cleared, even when
       the setting for it is enabled.
