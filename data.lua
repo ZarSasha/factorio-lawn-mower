@@ -24,22 +24,18 @@ data:extend({
       mode = {"nothing"},
       border_color = {r = 0.125, g = 0.447, b = 0.13, a = 0.051},
       cursor_box_type = "not-allowed",
-      started_sound = {filename = "__core__/sound/deconstruct-select-start.ogg"}
-      --ended_sound won't trigger, runtime script needed
+      started_sound = {filename = "__core__/sound/deconstruct-select-start.ogg"},
+      ended_sound = {filename = "__core__/sound/deconstruct-select-end.ogg"},
+      play_ended_sound_when_nothing_selected = true
     },
     alt_select = {
       mode = {"nothing"},
       border_color = {r = 0.125, g = 0.447, b = 0.13, a = 0.301},
       cursor_box_type = "not-allowed",
       started_sound = {filename = "__core__/sound/deconstruct-select-start.ogg"},
-      --ended_sound won't trigger, runtime script needed
+      ended_sound = {filename = "__core__/sound/deconstruct-select-end.ogg"},
+      play_ended_sound_when_nothing_selected = true
     }
     --skip_fog_of_war = true
-  },
-  { -- Sound definition for runtime script.
-    type = "sound",
-    name = "lawnmower-lawnmowing-end",
-    category = "gui-effect",
-    filename = "__core__/sound/deconstruct-select-end.ogg"
   }
 })
