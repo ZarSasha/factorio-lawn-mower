@@ -2,12 +2,6 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
--- Caches values from settings.
-local cache = { settings = {
-  clear_range = settings.global["lawnmower-building-clear-range"].value,
-  drop_items  = settings.global["lawnmower-drop-minable-items"  ].value
-}}
-
 -- Function for destroying corpses (items drops OFF).
 local function destroy_all_corpses(info)
   local corpses = info.corpses
@@ -73,7 +67,7 @@ local function clear_area(info)
     type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
   })
   if corpses == {} then return end
-  if cache.settings.drop_items then
+  if storage.settings.lawnmower_drop_minable_items then
     destroy_all_corpses_and_drop_items({
       surface = surface,
       corpses = corpses
@@ -129,8 +123,36 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = cache.settings.clear_range
+    range   = storage.settings.lawnmower_building_clear_range
   })
+end)
+
+-- STORAGE TABLE INITIALIZATION & CACHING OF VALUES FROM SETTINGS --
+
+local function cacheSettings()
+  storage.settings = {} -- no preservation, simple reset
+  storage.settings.lawnmower_building_clear_range =
+    settings.global["lawnmower-building-clear-range"].value
+  storage.settings.lawnmower_drop_minable_items =
+    settings.global["lawnmower-drop-minable-items"].value
+end
+
+-- SCRIPTS: CACHE VALUE UPDATE --
+
+script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
+  if event.setting ~= "lawnmower-building-clear-range" and
+     event.setting ~= "lawnmower-drop-minable-items" then
+    return
+  end
+  cacheSettings()
+end)
+
+script.on_init(function()
+  cacheSettings()
+end)
+
+script.on_configuration_changed(function()
+  cacheSettings()
 end)
 
 --------------------------------------------------------------------------------
