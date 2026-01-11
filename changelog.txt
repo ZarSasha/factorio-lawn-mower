@@ -15,7 +15,7 @@ Date: 2026-01-11
       since nothing was or has to be preserved through the save/load cycle (improves performance).
   Bugfixes:
     - fixed issue with minable corpses not dropping any items on the ground when cleared, even when
-      the setting for it is enabled (still won't work on character corpses, btw).
+      the setting for it is enabled.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.4
 Date: 2025-06-12
