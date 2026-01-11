@@ -28,7 +28,7 @@ local function destroy_all_corpses_and_drop_items(info)
     end
     local temp_inventory = game.create_inventory(100) -- enough? enough.
     local position = corpse.position
-    corpse.mine({ -- corpse remains until fully emptied
+    corpse.mine({ -- corpse remains if not fully emptied
       inventory = temp_inventory
     })
     surface.spill_inventory({ -- available since v2.0.51.
