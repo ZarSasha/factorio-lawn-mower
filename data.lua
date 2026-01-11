@@ -1,12 +1,5 @@
 data:extend({
   {
-    type = "item",
-    name = "lawnmower-lawnmower",
-    stack_size = 1,
-    auto_recycle = false,
-    hidden = true
-  },
-  {
     type = "shortcut",
     name = "lawnmower-give-lawnmower",
     order = "z",
