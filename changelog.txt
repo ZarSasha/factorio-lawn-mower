@@ -12,7 +12,9 @@ Date: 2026-01-11
     - compacted code, tidied up formatting, simplified mod structure.
     - Changed name of shortcut for the sake of consistency.
   Gui:
-    - Added instructions to lawnmower shortcut.
+    - added instructions to lawnmower selection tool shortcut.
+  Sounds:
+    - added sound effects to lawnmower selection tool (same as those of deconstruction planner).
   Bugfixes:
     - fixed issue with minable corpses not dropping any items on the ground when cleared, even when
       the setting for it is enabled.

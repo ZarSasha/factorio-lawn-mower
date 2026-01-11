@@ -22,12 +22,16 @@ data:extend({
     ["select"] = {
       mode = {"nothing"},
       border_color = {r = 0.125, g = 0.447, b = 0.13, a = 0.051},
-      cursor_box_type = "not-allowed"
+      cursor_box_type = "not-allowed",
+      started_sound = { filename = "__core__/sound/deconstruct-select-start.ogg" },
+      ended_sound = { filename = "__core__/sound/deconstruct-select-end.ogg" }
     },
     ["alt_select"] = {
       mode = {"nothing"},
       border_color = {r = 0.125, g = 0.447, b = 0.13, a = 0.051},
-      cursor_box_type = "not-allowed"
+      cursor_box_type = "not-allowed",
+      started_sound = { filename = "__core__/sound/deconstruct-select-start.ogg" },
+      ended_sound = { filename = "__core__/sound/deconstruct-select-end.ogg" }
     },
     flags = { "only-in-cursor", "not-stackable", "spawnable" }
   }
