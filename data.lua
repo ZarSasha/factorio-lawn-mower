@@ -31,7 +31,7 @@ data:extend({
       mode = {"nothing"},
       border_color = {r = 0.125, g = 0.447, b = 0.13, a = 0.301},
       cursor_box_type = "not-allowed",
-      started_sound = {filename = "__core__/sound/deconstruct-cancel-start.ogg"},
+      started_sound = {filename = "__core__/sound/deconstruct-select-start.ogg"},
       --ended_sound won't trigger, runtime script needed
     }
     --skip_fog_of_war = true
