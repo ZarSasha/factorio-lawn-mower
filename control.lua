@@ -67,7 +67,7 @@ local function clear_area(info)
     type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
   })
   if corpses == {} then return end
-  if storage.settings.lawnmower_drop_minable_items then
+  if storage.settings.drop_minable_items then
     destroy_all_corpses_and_drop_items({
       surface = surface,
       corpses = corpses
@@ -135,7 +135,7 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = storage.settings.lawnmower_building_clear_range
+    range   = storage.settings.building_clear_range
   })
 end)
 
@@ -143,9 +143,9 @@ end)
 
 local function cacheSettings()
   storage.settings = {} -- no preservation, simple reset
-  storage.settings.lawnmower_building_clear_range =
+  storage.settings.building_clear_range =
     settings.global["lawnmower-building-clear-range"].value
-  storage.settings.lawnmower_drop_minable_items =
+  storage.settings.drop_minable_items =
     settings.global["lawnmower-drop-minable-items"].value
 end
 
