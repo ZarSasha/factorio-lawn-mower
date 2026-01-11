@@ -2,7 +2,7 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
--- Function for destroying corpses (items drops OFF).
+-- Function for destroying corpses (item drops OFF).
 local function destroy_all_corpses(info)
   local corpses = info.corpses
   -- Clears corpses, raises event if minable:
@@ -17,7 +17,7 @@ local function destroy_all_corpses(info)
   end
 end
 
--- Function for destroying corpses (items drops ON).
+-- Function for destroying corpses (item drops ON).
 local function destroy_all_corpses_and_drop_items(info)
   local surface = info.surface
   local corpses = info.corpses
