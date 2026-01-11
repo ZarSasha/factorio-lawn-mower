@@ -41,11 +41,5 @@ data:extend({
     name = "lawnmower-lawnmowing-end",
     category = "gui-effect",
     filename = "__core__/sound/deconstruct-select-end.ogg"
-  },
-  { -- Sound definition for runtime script.
-    type = "sound",
-    name = "lawnmower-lawnmowing-alt-end",
-    category = "gui-effect",
-    filename = "__core__/sound/deconstruct-cancel-end.ogg"
   }
 })

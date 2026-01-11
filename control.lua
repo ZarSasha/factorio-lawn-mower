@@ -81,13 +81,9 @@ end
 
 -- Function for playing sound for lawnmowing (needed since none of the deleted
 -- objects will trigger the "ended_sound" for the selection tool).
-local function play_lawnmower_end_sound(info)
-  local event = info.event
-  local alt   = info.alt
-  local name = alt and "lawnmower-lawnmowing-alt-end" or
-    "lawnmower-lawnmowing-end"
+local function play_lawnmower_end_sound(event)
   game.players[event.player_index].play_sound({
-    path = name,
+    path = "lawnmower-lawnmowing-end",
     position = event.area.left_top}
   )
 end
@@ -96,12 +92,10 @@ end
 
 -- Clears decoratives and corpses with the normal selection mode.
 script.on_event({
-    defines.events.on_player_selected_area,
+  defines.events.on_player_selected_area,
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
-  play_lawnmower_end_sound({
-    event = event
-  })
+  play_lawnmower_end_sound(event)
   clear_area({
     surface = event.surface,
     area    = event.area
@@ -110,13 +104,10 @@ end)
 
 -- Clears corpses only with the alternate selection mode.
 script.on_event({
-    defines.events.on_player_alt_selected_area
+  defines.events.on_player_alt_selected_area
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
-  play_lawnmower_end_sound({
-    event = event,
-    alt   = true
-  })
+  play_lawnmower_end_sound(event)
   clear_area({
     surface = event.surface,
     area    = event.area,
