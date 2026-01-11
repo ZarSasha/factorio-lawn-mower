@@ -10,6 +10,8 @@ Date: 2026-01-11
     - now raises an event if minable corpses are technically destroyed, just in case other mods
       need to know.
     - compacted code, tidied up formatting, simplified mod structure.
+    - now uses local variables instead of storage to cache values from settings, since nothing
+      needs to be preserved through the save/load cycle. Performance improved.
   Bugfixes:
     - fixed issue with corpses not dropping any items on the ground when cleared, even when the
       setting for it is enabled (won't work on character corpses, btw).

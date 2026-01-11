@@ -2,6 +2,12 @@
 -- CLEARING AREA OF DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
+-- Cached values from settings.
+local SET = {
+  clear_range = settings.global["lawnmower-building-clear-range"].value,
+  drop_items  = settings.global["lawnmower-drop-minable-items"].value
+}
+
 -- For use with item drops turned off.
 local function destroy_all_corpses(info)
   local corpses = info.corpses
@@ -67,7 +73,7 @@ local function clear_area(info)
     type = "corpse"
   })
   if corpses == {} then return end
-  if storage.settings.lawnmower_drop_minable_items then
+  if SET.drop_items then
     destroy_all_corpses_and_drop_items({
       surface = surface,
       corpses = corpses
@@ -123,11 +129,11 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = storage.settings.lawnmower_building_clear_range
+    range   = SET.clear_range
   })
 end)
 
-
+--[[
 -- SCRIPTS: STORAGE TABLE INITIALIZATION & CACHING OF SETTINGS --
 
 -- Caches values of settings, improving performance especially with many mods.
@@ -155,5 +161,5 @@ end)
 script.on_configuration_changed(function()
   cacheSettings()
 end)
-
+]]
 --------------------------------------------------------------------------------
