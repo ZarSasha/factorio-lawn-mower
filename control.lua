@@ -73,7 +73,7 @@ local function clear_area(info)
     type = "corpse"
   })
   if corpses == {} then return end
-  if SET.drop_items then
+  if settings.global["lawnmower-drop-minable-items"].value then
     destroy_all_corpses_and_drop_items({
       surface = surface,
       corpses = corpses
@@ -129,11 +129,11 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = SET.clear_range
+    range   = settings.global["lawnmower-building-clear-range"].value
   })
 end)
 
---[[
+
 -- SCRIPTS: STORAGE TABLE INITIALIZATION & CACHING OF SETTINGS --
 
 -- Caches values of settings, improving performance especially with many mods.
@@ -161,5 +161,5 @@ end)
 script.on_configuration_changed(function()
   cacheSettings()
 end)
-]]
+
 --------------------------------------------------------------------------------
