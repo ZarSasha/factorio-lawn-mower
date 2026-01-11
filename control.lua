@@ -82,9 +82,10 @@ end
 -- Function for playing sound for lawnmowing (needed since none of the deleted
 -- objects will trigger the "ended_sound" for the selection tool).
 local function play_lawnmower_end_sound(event)
-  game.players[event.player_index].play_sound({
+  local player = game.players[event.player_index]
+  player.play_sound({
     path = "lawnmower-lawnmowing-end",
-    position = event.area.left_top}
+    position = player.position}
   )
 end
 
