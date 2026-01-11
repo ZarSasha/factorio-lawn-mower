@@ -10,6 +10,7 @@ Date: 2026-01-11
     - now raises an event if minable corpses are removed with .destroy(), just in case other mods
       need to know.
     - compacted code, tidied up formatting, simplified mod structure.
+    - Changed name of shortcut for the sake of consistency.
   Gui:
     - Added instructions to lawnmower shortcut.
   Bugfixes:
