@@ -13,8 +13,10 @@ Date: 2026-01-11
     - Changed name of shortcut for the sake of consistency.
   Gui:
     - added instructions to lawnmower selection tool shortcut.
+    - differentiated colors for lawnmower area selection borders depending on mode.
   Sounds:
-    - added sound effects to lawnmower selection tool (same as those of deconstruction planner).
+    - added sound effects for the use of the lawnmower selection tool (same as those of the
+      deconstruction planner).
   Bugfixes:
     - fixed issue with minable corpses not dropping any items on the ground when cleared, even when
       the setting for it is enabled.
