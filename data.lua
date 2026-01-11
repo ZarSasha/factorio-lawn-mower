@@ -1,7 +1,7 @@
 data:extend({
   {
     type = "shortcut",
-    name = "give-lawnmower",
+    name = "lawnmower-give-lawnmower",
     order = "z",
     action = "spawn-item",
     item_to_spawn = "lawnmower-lawnmower",
