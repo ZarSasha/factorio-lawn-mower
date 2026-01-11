@@ -6,10 +6,11 @@ Date: 2026-01-11
   Minor Features:
     - items dropped from cleared corpses can now be picked up by walking over them, and they won't
       be dropped unto nearby conveyor belts.
+    - added option to declare a key sequence as a shortcut for the lawnmower.
   Changes:
+    - compacted code, tidied up formatting, simplified mod structure.
     - now raises an event if minable corpses are removed with .destroy(), just in case other mods
       need to know.
-    - compacted code, tidied up formatting, simplified mod structure.
     - changed name of shortcut for the sake of consistency.
     - shortened names of storage table variables, since the table is exclusive to the mod
       (no migration needed).
