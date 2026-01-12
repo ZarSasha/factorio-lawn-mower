@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
+-- CLEAR DECORATIONS AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
 -- FUNCTIONS FOR DEFINING AREA --
@@ -107,7 +107,7 @@ end
 
 -- SCRIPTS: CLEAR AREA WITH LAWNMOWER AREA SELECTION TOOL --
 
--- Clears decorations and corpses with the normal selection mode.
+-- Normal selection mode: Clears decorations and corpses.
 script.on_event({
   defines.events.on_player_selected_area,
 }, function(event)
@@ -119,7 +119,7 @@ script.on_event({
   })
 end)
 
--- Clears corpses only with the alternative selection mode.
+-- Alternative selection mode: Clears corpses only.
 script.on_event({
   defines.events.on_player_alt_selected_area
 }, function(event)
