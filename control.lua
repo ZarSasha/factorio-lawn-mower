@@ -2,7 +2,7 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
-local function destroy_corpse(info)
+local function destroy_single_corpse_ignore_items(info)
   local corpse = info.corpse
   if not corpse.minable then
     corpse.destroy() return
@@ -12,7 +12,7 @@ local function destroy_corpse(info)
   })
 end
 
-local function destroy_corpse_drop_items(info)
+local function destroy_single_corpse_drop_items(info)
   local surface = info.surface
   local corpse  = info.corpse
   if not corpse.minable then
@@ -32,26 +32,26 @@ local function destroy_corpse_drop_items(info)
   temp_inventory.destroy()
 end
 
-local function destroy_corpses(info)
-  local surface      = info.surface
-  local area         = info.area
-  local enable_drops = info.enable_drops
+local function destroy_all_corpses_in_area(info)
+  local surface = info.surface
+  local area    = info.area
+  local drops   = info.drops -- drops from minable corpses
   local corpses = surface.find_entities_filtered({
     area = area,
     type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
   })
   if next(corpses) == nil then return end
-  if enable_drops then
+  if drops then
     for _, corpse in pairs(corpses) do
-      destroy_corpse({
-        corpse = corpse
+      destroy_single_corpse_ignore_items({
+        corpse  = corpse
       })
     end
   else
     for _, corpse in pairs(corpses) do
-      destroy_corpse_drop_items({
+      destroy_single_corpse_drop_items({
         surface = surface,
-        corpse = corpse
+        corpse  = corpse
       })
     end
   end
@@ -83,9 +83,10 @@ local function clear_area(info)
     })
   end
   do
-    destroy_corpses({
+    destroy_all_corpses_in_area({
       surface = surface,
-      area    = area
+      area    = area,
+      drops   = storage.settings.drop_minable_items
     })
   end
 end
@@ -99,7 +100,8 @@ script.on_event({
   if event.item ~= "lawnmower-lawnmower" then return end
   clear_area({
     surface = event.surface,
-    area    = event.area
+    area    = event.area,
+    drops   = storage.settings.drop_minable_items
   })
 end)
 
@@ -111,7 +113,8 @@ script.on_event({
   clear_area({
     surface = event.surface,
     area    = event.area,
-    alt     = true
+    alt     = true,
+    drops   = storage.settings.drop_minable_items
   })
 end)
 
@@ -134,7 +137,8 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = storage.settings.building_clear_range
+    range   = storage.settings.building_clear_range,
+    drops   = storage.settings.drop_minable_items
   })
 end)
 
