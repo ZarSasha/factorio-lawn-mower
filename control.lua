@@ -2,37 +2,52 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
-local function destroy_single_corpse_drop_items(info)
+local function expand_area(info)
+  local area  = info.area
+  local range = info.range
+  area.left_top.x     = area.left_top.x     - range
+  area.left_top.y     = area.left_top.y     - range
+  area.right_bottom.x = area.right_bottom.x + range
+  area.right_bottom.y = area.right_bottom.y + range
+end
+
+local function destroy_corpses_drop_items(info)
   local surface = info.surface
-  local corpse  = info.corpse
-  if not corpse.minable then
-    corpse.destroy() return
+  local corpses  = info.corpses
+  for _, corpse in pairs(corpses) do
+    if not corpse.minable then
+      corpse.destroy() goto continue
+    end
+    local temp_inventory = game.create_inventory(100) -- enough? enough.
+    local position = corpse.position
+    corpse.mine({ -- corpse remains if not fully emptied
+      inventory = temp_inventory
+    })
+    surface.spill_inventory({ -- available since v2.0.51.
+      inventory     = temp_inventory,
+      position      = position,
+      allow_belts   = false, -- not dropped on existing belts
+      enable_looted = true,  -- walk over to pick up
+    })
+    temp_inventory.destroy()
+    ::continue::
   end
-  local temp_inventory = game.create_inventory(100) -- enough? enough.
-  local position = corpse.position
-  corpse.mine({ -- corpse remains if not fully emptied
-    inventory = temp_inventory
-  })
-  surface.spill_inventory({ -- available since v2.0.51.
-    inventory     = temp_inventory,
-    position      = position,
-    allow_belts   = false, -- not dropped on existing belts
-    enable_looted = true,  -- walk over to pick up
-  })
-  temp_inventory.destroy()
 end
 
-local function destroy_single_corpse_ignore_items(info)
-  local corpse = info.corpse
-  if not corpse.minable then
-    corpse.destroy() return
+local function destroy_corpses_ignore_items(info)
+  local corpses = info.corpses
+  for _, corpse in pairs(corpses) do
+    if not corpse.minable then
+      corpse.destroy() goto continue
+    end
+    corpse.destroy({
+      raise_destroy = true -- informs other mods, just in case
+    })
+    ::continue::
   end
-  corpse.destroy({
-    raise_destroy = true -- informs other mods, just in case
-  })
 end
 
-local function destroy_all_corpses_in_area(info)
+local function destroy_corpses_in_area(info)
   local surface = info.surface
   local area    = info.area
   local drops   = info.drops -- drops from minable corpses
@@ -42,28 +57,15 @@ local function destroy_all_corpses_in_area(info)
   })
   if next(corpses) == nil then return end
   if drops then
-    for _, corpse in pairs(corpses) do
-      destroy_single_corpse_drop_items({
+    destroy_corpses_drop_items({
         surface = surface,
-        corpse  = corpse
-      })
-    end
+        corpses  = corpses
+    })
   else
-    for _, corpse in pairs(corpses) do
-      destroy_single_corpse_ignore_items({
-        corpse  = corpse
-      })
-    end
+    destroy_corpses_ignore_items({
+      corpses  = corpses
+    })
   end
-end
-
-local function expand_area(info)
-  local area  = info.area
-  local range = info.range
-  area.left_top.x     = area.left_top.x     - range
-  area.left_top.y     = area.left_top.y     - range
-  area.right_bottom.x = area.right_bottom.x + range
-  area.right_bottom.y = area.right_bottom.y + range
 end
 
 local function clear_area(info)
@@ -83,7 +85,7 @@ local function clear_area(info)
     })
   end
   do
-    destroy_all_corpses_in_area({
+    destroy_corpses_in_area({
       surface = surface,
       area    = area,
       drops   = storage.settings.drop_minable_items
