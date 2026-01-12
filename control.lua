@@ -2,79 +2,90 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
--- Function for destroying corpses (item drops OFF).
-local function destroy_all_corpses(info)
-  local corpses = info.corpses
-  -- Clears corpses, raises event if minable:
-  for _, corpse in pairs(corpses) do
-    if not corpse.minable then
-      corpse.destroy() goto continue
-    end
-    corpse.destroy({
-      raise_destroy = true -- informs other mods, just in case
-    })
-    ::continue::
+local function destroy_corpse(info)
+  local corpse = info.corpse
+  if not corpse.minable then
+    corpse.destroy() return
   end
+  corpse.destroy({
+    raise_destroy = true -- informs other mods, just in case
+  })
 end
 
--- Function for destroying corpses (item drops ON).
-local function destroy_all_corpses_and_drop_items(info)
+local function destroy_corpse_drop_items(info)
   local surface = info.surface
-  local corpses = info.corpses
-  -- Clears corpses, mining them if possible and dropping items on ground:
-  for _, corpse in pairs(corpses) do
-    if not corpse.minable then
-      corpse.destroy() goto continue
+  local corpse  = info.corpse
+  if not corpse.minable then
+    corpse.destroy() return
+  end
+  local temp_inventory = game.create_inventory(100) -- enough? enough.
+  local position = corpse.position
+  corpse.mine({ -- corpse remains if not fully emptied
+    inventory = temp_inventory
+  })
+  surface.spill_inventory({ -- available since v2.0.51.
+    inventory     = temp_inventory,
+    position      = position,
+    allow_belts   = false, -- not dropped on existing belts
+    enable_looted = true,  -- walk over to pick up
+  })
+  temp_inventory.destroy()
+end
+
+local function destroy_corpses(info)
+  local surface      = info.surface
+  local area         = info.area
+  local enable_drops = info.enable_drops
+  local corpses = surface.find_entities_filtered({
+    area = area,
+    type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
+  })
+  if next(corpses) == nil then return end
+  if enable_drops then
+    for _, corpse in pairs(corpses) do
+      destroy_corpse({
+        corpse = corpse
+      })
     end
-    local temp_inventory = game.create_inventory(100) -- enough? enough.
-    local position = corpse.position
-    corpse.mine({ -- corpse remains if not fully emptied
-      inventory = temp_inventory
-    })
-    surface.spill_inventory({ -- available since v2.0.51.
-      inventory     = temp_inventory,
-      position      = position,
-      allow_belts   = false, -- not dropped on existing belts
-      enable_looted = true,  -- walk over to pick up
-    })
-    temp_inventory.destroy()
-    ::continue::
+  else
+    for _, corpse in pairs(corpses) do
+      destroy_corpse_drop_items({
+        surface = surface,
+        corpse = corpse
+      })
+    end
   end
 end
 
--- Main function for clearing area (configurable).
+local function expand_area(info)
+  local area  = info.area
+  local range = info.range
+  area.left_top.x     = area.left_top.x     - range
+  area.left_top.y     = area.left_top.y     - range
+  area.right_bottom.x = area.right_bottom.x + range
+  area.right_bottom.y = area.right_bottom.y + range
+end
+
 local function clear_area(info)
   local surface = info.surface
   local area    = info.area
   local range   = info.range or 0
   local alt     = info.alt or false
-  -- Optionally increases size of affected area:
   if range > 0 then
-    area.left_top.x     = area.left_top.x     - range
-    area.left_top.y     = area.left_top.y     - range
-    area.right_bottom.x = area.right_bottom.x + range
-    area.right_bottom.y = area.right_bottom.y + range
+    expand_area({
+      area  = area,
+      range = range
+    })
   end
-  -- Clears decoratives by default:
   if not alt then
     surface.destroy_decoratives({
       area = area
     })
   end
-  -- Clears corpses, optionally drops any items:
-  local corpses = surface.find_entities_filtered({
-    area = area,
-    type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
-  })
-  if corpses == {} then return end
-  if storage.settings.drop_minable_items then
-    destroy_all_corpses_and_drop_items({
+  do
+    destroy_corpses({
       surface = surface,
-      corpses = corpses
-    })
-  else
-    destroy_all_corpses({
-      corpses = corpses
+      area    = area
     })
   end
 end
