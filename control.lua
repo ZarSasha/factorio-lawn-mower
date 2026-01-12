@@ -2,6 +2,7 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
+-- Expands size of a selection area.
 local function expand_area(info)
   local area  = info.area
   local range = info.range
@@ -11,6 +12,7 @@ local function expand_area(info)
   area.right_bottom.y = area.right_bottom.y + range
 end
 
+-- Destroys corpses and drops any items.
 local function destroy_corpses_drop_items(info)
   local surface = info.surface
   local corpses  = info.corpses
@@ -34,6 +36,7 @@ local function destroy_corpses_drop_items(info)
   end
 end
 
+-- Destroys corpses without dropping any items.
 local function destroy_corpses_ignore_items(info)
   local corpses = info.corpses
   for _, corpse in pairs(corpses) do
@@ -47,6 +50,7 @@ local function destroy_corpses_ignore_items(info)
   end
 end
 
+-- Destroys corpses within a given area, optionally dropping items.
 local function destroy_corpses_in_area(info)
   local surface = info.surface
   local area    = info.area
@@ -68,6 +72,7 @@ local function destroy_corpses_in_area(info)
   end
 end
 
+-- Destroys decorations and/or corpses within a given area (configurable).
 local function clear_area(info)
   local surface = info.surface
   local area    = info.area
@@ -95,7 +100,7 @@ end
 
 -- SCRIPTS: CLEAR AREA WITH LAWNMOWER AREA SELECTION TOOL --
 
--- Clears decoratives and corpses with the normal selection mode.
+-- Clears decorations and corpses with the normal selection mode.
 script.on_event({
   defines.events.on_player_selected_area,
 }, function(event)
@@ -122,7 +127,7 @@ end)
 
 -- SCRIPTS: CLEAR VICINITY WHEN BUILDING --
 
--- Clears decoratives and corpses when placing down entities/tiles.
+-- Clears decorations and corpses when placing down entities/tiles.
 script.on_event({
     defines.events.on_built_entity,
     defines.events.on_robot_built_entity,
@@ -154,7 +159,7 @@ local function cacheSettings()
     settings.global["lawnmower-drop-minable-items"].value
 end
 
--- SCRIPTS: CACHE VALUE UPDATE --
+-- SCRIPTS: CACHED VALUES UPDATE --
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
   if event.setting ~= "lawnmower-building-clear-range" and
