@@ -15,7 +15,7 @@ end
 -- Destroys corpses and drops any items.
 local function destroy_corpses_drop_items(info)
   local surface = info.surface
-  local corpses  = info.corpses
+  local corpses = info.corpses
   for _, corpse in pairs(corpses) do
     if not corpse.minable then
       corpse.destroy() goto continue
@@ -62,12 +62,12 @@ local function destroy_corpses_in_area(info)
   if next(corpses) == nil then return end
   if drops then
     destroy_corpses_drop_items({
-        surface = surface,
-        corpses  = corpses
+      surface = surface,
+      corpses = corpses
     })
   else
     destroy_corpses_ignore_items({
-      corpses  = corpses
+      corpses = corpses
     })
   end
 end
