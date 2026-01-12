@@ -2,17 +2,22 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
--- Expands size of a selection area.
-local function expand_area(info)
-  local area  = info.area
-  local range = info.range
-  area.left_top.x     = area.left_top.x     - range
-  area.left_top.y     = area.left_top.y     - range
-  area.right_bottom.x = area.right_bottom.x + range
-  area.right_bottom.y = area.right_bottom.y + range
+-- FUNCTIONS FOR DEFINING AREA --
+
+-- Expands size of selection area with a given value.
+local function expand_selection_area(info)
+  local area   = info.area
+  local offset = info.offset
+  if offset == 0 then return end
+  area.left_top.x     = area.left_top.x     - offset
+  area.left_top.y     = area.left_top.y     - offset
+  area.right_bottom.x = area.right_bottom.x + offset
+  area.right_bottom.y = area.right_bottom.y + offset
 end
 
--- Destroys corpses and drops any items.
+-- FUNCTIONS FOR DESTROYING CORPSES --
+
+-- Alternative 1: Destroys corpses and drops any items.
 local function destroy_corpses_drop_items(info)
   local surface = info.surface
   local corpses = info.corpses
@@ -36,7 +41,7 @@ local function destroy_corpses_drop_items(info)
   end
 end
 
--- Destroys corpses without dropping any items.
+-- Alternative 2: Destroys corpses and drops no items.
 local function destroy_corpses_ignore_items(info)
   local corpses = info.corpses
   for _, corpse in pairs(corpses) do
@@ -50,11 +55,11 @@ local function destroy_corpses_ignore_items(info)
   end
 end
 
--- Destroys corpses within a given area, optionally dropping items.
+-- Main function: Destroys corpses within area, optionally drops items.
 local function destroy_corpses_in_area(info)
   local surface = info.surface
   local area    = info.area
-  local drops   = info.drops -- drops from minable corpses
+  local drops   = info.drops
   local corpses = surface.find_entities_filtered({
     area = area,
     type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
@@ -72,16 +77,18 @@ local function destroy_corpses_in_area(info)
   end
 end
 
+-- MAIN FUNCTION FOR CLEARING DECORATIONS AND CORPSES --
+
 -- Destroys decorations and/or corpses within a given area (configurable).
 local function clear_area(info)
   local surface = info.surface
   local area    = info.area
-  local range   = info.range or 0
-  local alt     = info.alt or false
-  if range > 0 then
-    expand_area({
-      area  = area,
-      range = range
+  local offset  = info.offset -- area radius increase
+  local alt     = info.alt    -- for alternative mode
+  if offset ~= nil then
+    expand_selection_area({
+      area   = area,
+      offset = offset
     })
   end
   if not alt then
@@ -144,7 +151,7 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = storage.settings.building_clear_range,
+    offset  = storage.settings.building_clear_range,
     drops   = storage.settings.drop_minable_items
   })
 end)
