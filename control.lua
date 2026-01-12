@@ -2,26 +2,20 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
--- Function for destroying corpses (item drops OFF).
-local function destroy_all_corpses(info)
-  local corpses = info.corpses
-  -- Clears corpses, raises event if minable:
-  for _, corpse in pairs(corpses) do
-    if not corpse.minable then
-      corpse.destroy() goto continue
-    end
-    corpse.destroy({
-      raise_destroy = true -- informs other mods, just in case
-    })
-    ::continue::
-  end
+-- Expands size of a selection area.
+local function expand_area(info)
+  local area  = info.area
+  local range = info.range
+  area.left_top.x     = area.left_top.x     - range
+  area.left_top.y     = area.left_top.y     - range
+  area.right_bottom.x = area.right_bottom.x + range
+  area.right_bottom.y = area.right_bottom.y + range
 end
 
--- Function for destroying corpses (item drops ON).
-local function destroy_all_corpses_and_drop_items(info)
+-- Destroys corpses and drops any items.
+local function destroy_corpses_drop_items(info)
   local surface = info.surface
-  local corpses = info.corpses
-  -- Clears corpses, mining them if possible and dropping items on ground:
+  local corpses  = info.corpses
   for _, corpse in pairs(corpses) do
     if not corpse.minable then
       corpse.destroy() goto continue
@@ -42,53 +36,79 @@ local function destroy_all_corpses_and_drop_items(info)
   end
 end
 
--- Main function for clearing area (configurable).
+-- Destroys corpses without dropping any items.
+local function destroy_corpses_ignore_items(info)
+  local corpses = info.corpses
+  for _, corpse in pairs(corpses) do
+    if not corpse.minable then
+      corpse.destroy() goto continue
+    end
+    corpse.destroy({
+      raise_destroy = true -- informs other mods, just in case
+    })
+    ::continue::
+  end
+end
+
+-- Destroys corpses within a given area, optionally dropping items.
+local function destroy_corpses_in_area(info)
+  local surface = info.surface
+  local area    = info.area
+  local drops   = info.drops -- drops from minable corpses
+  local corpses = surface.find_entities_filtered({
+    area = area,
+    type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
+  })
+  if next(corpses) == nil then return end
+  if drops then
+    destroy_corpses_drop_items({
+        surface = surface,
+        corpses  = corpses
+    })
+  else
+    destroy_corpses_ignore_items({
+      corpses  = corpses
+    })
+  end
+end
+
+-- Destroys decorations and/or corpses within a given area (configurable).
 local function clear_area(info)
   local surface = info.surface
   local area    = info.area
   local range   = info.range or 0
   local alt     = info.alt or false
-  -- Optionally increases size of affected area:
   if range > 0 then
-    area.left_top.x     = area.left_top.x     - range
-    area.left_top.y     = area.left_top.y     - range
-    area.right_bottom.x = area.right_bottom.x + range
-    area.right_bottom.y = area.right_bottom.y + range
+    expand_area({
+      area  = area,
+      range = range
+    })
   end
-  -- Clears decoratives by default:
   if not alt then
     surface.destroy_decoratives({
       area = area
     })
   end
-  -- Clears corpses, optionally drops any items:
-  local corpses = surface.find_entities_filtered({
-    area = area,
-    type = "corpse" -- enemy corpses, tree stumps, remnants, scorch marks
-  })
-  if corpses == {} then return end
-  if storage.settings.drop_minable_items then
-    destroy_all_corpses_and_drop_items({
+  do
+    destroy_corpses_in_area({
       surface = surface,
-      corpses = corpses
-    })
-  else
-    destroy_all_corpses({
-      corpses = corpses
+      area    = area,
+      drops   = storage.settings.drop_minable_items
     })
   end
 end
 
 -- SCRIPTS: CLEAR AREA WITH LAWNMOWER AREA SELECTION TOOL --
 
--- Clears decoratives and corpses with the normal selection mode.
+-- Clears decorations and corpses with the normal selection mode.
 script.on_event({
   defines.events.on_player_selected_area,
 }, function(event)
   if event.item ~= "lawnmower-lawnmower" then return end
   clear_area({
     surface = event.surface,
-    area    = event.area
+    area    = event.area,
+    drops   = storage.settings.drop_minable_items
   })
 end)
 
@@ -100,13 +120,14 @@ script.on_event({
   clear_area({
     surface = event.surface,
     area    = event.area,
+    drops   = storage.settings.drop_minable_items,
     alt     = true
   })
 end)
 
 -- SCRIPTS: CLEAR VICINITY WHEN BUILDING --
 
--- Clears decoratives and corpses when placing down entities/tiles.
+-- Clears decorations and corpses when placing down entities/tiles.
 script.on_event({
     defines.events.on_built_entity,
     defines.events.on_robot_built_entity,
@@ -123,7 +144,8 @@ script.on_event({
   clear_area({
     surface = game.surfaces[entity.surface_index],
     area    = entity.selection_box,
-    range   = storage.settings.building_clear_range
+    range   = storage.settings.building_clear_range,
+    drops   = storage.settings.drop_minable_items
   })
 end)
 
@@ -137,7 +159,7 @@ local function cacheSettings()
     settings.global["lawnmower-drop-minable-items"].value
 end
 
--- SCRIPTS: CACHE VALUE UPDATE --
+-- SCRIPTS: CACHED VALUES UPDATE --
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
   if event.setting ~= "lawnmower-building-clear-range" and

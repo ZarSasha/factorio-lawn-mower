@@ -1,6 +1,6 @@
 data:extend({
   {
-    type = "int-setting",
+    type = "double-setting",
     name = "lawnmower-building-clear-range",
     setting_type = "runtime-global",
     default_value = 0,
