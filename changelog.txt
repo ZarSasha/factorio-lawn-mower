@@ -1,11 +1,6 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.2.1
-Date: 2026-01-12
-  Changes:
-    - Refactored script code.
----------------------------------------------------------------------------------------------------
 Version: 0.2.0
-Date: 2026-01-11
+Date: 2026-01-12
   Major Features:
     - the alternative selection option (shift + left click by default) now clears only corpses.
   Minor Features:
@@ -13,7 +8,7 @@ Date: 2026-01-11
       dropped unto nearby conveyor belts.
     - added option to set a key binding for quick access to the lawnmower tool.
   Changes:
-    - compacted code, tidied up formatting, simplified mod structure.
+    - Refactored code, tidied up formatting, simplified mod structure.
     - now raises an event if minable corpses are removed with .destroy(), just in case other mods
       need to know.
     - changed name of shortcut for the sake of consistency.
