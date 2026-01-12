@@ -2,16 +2,6 @@
 -- CLEAR DECORATIVES AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
-local function destroy_single_corpse_ignore_items(info)
-  local corpse = info.corpse
-  if not corpse.minable then
-    corpse.destroy() return
-  end
-  corpse.destroy({
-    raise_destroy = true -- informs other mods, just in case
-  })
-end
-
 local function destroy_single_corpse_drop_items(info)
   local surface = info.surface
   local corpse  = info.corpse
@@ -32,6 +22,16 @@ local function destroy_single_corpse_drop_items(info)
   temp_inventory.destroy()
 end
 
+local function destroy_single_corpse_ignore_items(info)
+  local corpse = info.corpse
+  if not corpse.minable then
+    corpse.destroy() return
+  end
+  corpse.destroy({
+    raise_destroy = true -- informs other mods, just in case
+  })
+end
+
 local function destroy_all_corpses_in_area(info)
   local surface = info.surface
   local area    = info.area
@@ -43,14 +43,14 @@ local function destroy_all_corpses_in_area(info)
   if next(corpses) == nil then return end
   if drops then
     for _, corpse in pairs(corpses) do
-      destroy_single_corpse_ignore_items({
+      destroy_single_corpse_drop_items({
+        surface = surface,
         corpse  = corpse
       })
     end
   else
     for _, corpse in pairs(corpses) do
-      destroy_single_corpse_drop_items({
-        surface = surface,
+      destroy_single_corpse_ignore_items({
         corpse  = corpse
       })
     end
@@ -113,8 +113,8 @@ script.on_event({
   clear_area({
     surface = event.surface,
     area    = event.area,
-    alt     = true,
-    drops   = storage.settings.drop_minable_items
+    drops   = storage.settings.drop_minable_items,
+    alt     = true
   })
 end)
 
