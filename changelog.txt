@@ -11,7 +11,7 @@ Date: 2026-01-13
     - refactored code, tidied up formatting, simplified mod structure.
     - now raises an event if minable corpses are removed with .destroy(), just in case other mods
       need to know.
-    - changed name of shortcut for the sake of consistency.
+    - changed internal name of shortcut for the sake of consistency.
     - shortened names of storage table variables, since the table is exclusive to the mod
       (no migration needed).
     - changed clear range setting to accept double floating point values.
@@ -20,7 +20,7 @@ Date: 2026-01-13
     - added instructions to lawnmower selection tool shortcut.
     - changed mod description.
   Gui:
-    - differentiated colors for lawnmower area selection borders depending on mode.
+    - differentiated colors for lawnmower area selection box depending on mode.
   Sounds:
     - added sound effects for lawnmower selection tool (same as those of deconstruction planner).
   Bugfixes:
