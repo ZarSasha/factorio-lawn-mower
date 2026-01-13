@@ -6,7 +6,7 @@
 
 -- Expands size of selection area with a given value.
 local function expand_selection_area(info)
-  local area   = info.area
+  local area   = info.area -- apparently no need to check for long format
   local offset = info.offset
   if offset == 0 then return end
   area.left_top.x     = area.left_top.x     - offset
