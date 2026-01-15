@@ -2,9 +2,9 @@
 -- CLEAR DECORATIONS AND/OR CORPSES, WITH OPTIONAL ITEM DROPS
 --------------------------------------------------------------------------------
 
--- FUNCTIONS FOR DEFINING AREA --
+-- FUNCTION FOR INCREASING SIZE OF AREA --
 
--- Expands size of selection area with a given value.
+-- Expands size of bounding box or selection area with a given value.
 local function expand_selection_area(info)
   local area   = info.area -- apparently no need to check for long format
   local offset = info.offset
@@ -85,7 +85,7 @@ local function clear_area(info)
   local area    = info.area
   local offset  = info.offset -- area radius increase
   local alt     = info.alt    -- for alternative mode
-  if offset ~= nil then
+  if offset then
     expand_selection_area({
       area   = area,
       offset = offset
@@ -156,7 +156,7 @@ script.on_event({
   })
 end)
 
--- STORAGE TABLE INITIALIZATION & CACHING OF VALUES FROM SETTINGS --
+-- STORAGE TABLE INITIALIZATION & CACHING OF VALUES FROM RUNTIME SETTINGS --
 
 local function cacheSettings()
   storage.settings = {} -- simple reset
