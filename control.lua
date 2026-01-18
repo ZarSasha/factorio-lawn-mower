@@ -136,10 +136,10 @@ end)
 
 -- Clears decorations and corpses when placing down entities/tiles.
 script.on_event({
-    defines.events.on_built_entity,
-    defines.events.on_robot_built_entity,
-    defines.events.script_raised_built,
-    defines.events.script_raised_revive
+  defines.events.on_built_entity,
+  defines.events.on_robot_built_entity,
+  defines.events.script_raised_built,
+  defines.events.script_raised_revive
 }, function(event)
   local entity = event.entity
   if entity == nil or
@@ -168,7 +168,9 @@ end
 
 -- SCRIPTS: CACHED VALUES UPDATE --
 
-script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
+script.on_event({
+  defines.events.on_runtime_mod_setting_changed
+}, function(event)
   if event.setting ~= "lawnmower-building-clear-range" and
      event.setting ~= "lawnmower-drop-minable-items" then
     return
